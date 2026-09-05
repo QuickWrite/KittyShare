@@ -1,0 +1,14 @@
+{
+    "name": "quickwrite/kittyshare",
+    "description": "A very simple file-sharing application for your server.",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "KittyShare\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.4"
+    }
+}
