@@ -2,6 +2,9 @@
 composer.phar
 /vendor/
 
+# SQLite Database
+database.sqlite*
+
 # env file
 .env
 

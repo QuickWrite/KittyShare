@@ -2,6 +2,7 @@
 
 namespace KittyShare;
 
+use KittyShare\Repository\SQLiteDatabase;
 class DependencyManager
 {
     private static ?Dependencies $dependencies = null;
@@ -17,6 +18,8 @@ class DependencyManager
 
     private static function constructDependencies(): Dependencies
     {
+        $database = new SQLiteDatabase(__DIR__ . '/../database.sqlite');
+
         return new Dependencies(
         );
     }
