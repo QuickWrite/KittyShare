@@ -2,25 +2,15 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use KittyShare\DependencyManager;
 use KittyShare\Http\{Router, Method};
 
-$router = new Router();
+$dependencies = DependencyManager::get();
 
-$router->get('/', function () {
-    echo 'Homepage';
-});
+$router = new Router($dependencies);
 
-$router->get('/login', function () {
-    echo 'Login page';
-});
 
-$router->get('/setup', function () {
-    echo 'Setup page';
-});
 
-$router->post('/login', function () {
-    echo 'POST login page';
-});
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
@@ -31,4 +21,4 @@ if ($method === null) {
     exit;
 }
 
-$router->dispatch($method, $path);
+$router->dispatch($method, $path)->send();
