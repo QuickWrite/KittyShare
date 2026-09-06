@@ -2,7 +2,8 @@
 
 namespace KittyShare;
 
-use KittyShare\Repository\SQLiteDatabase;
+use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase};
+
 class DependencyManager
 {
     private static ?Dependencies $dependencies = null;
@@ -21,6 +22,7 @@ class DependencyManager
         $database = new SQLiteDatabase(__DIR__ . '/../database.sqlite');
 
         return new Dependencies(
+            user_repository: new SQLiteUserRepository($database->getInstance()),
         );
     }
 }
