@@ -74,7 +74,13 @@ final class Router
 
             $controller = new $controllerName($this->dependencies);
 
-            return $controller->handle(new Request($parameters));
+            return $controller->handle(
+                new Request(
+                    method: $method,
+                    uri: $path,
+                    parameters: $parameters,
+                )
+            );
         }
 
         return new TemplateResponse(

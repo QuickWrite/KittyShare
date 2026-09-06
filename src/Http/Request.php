@@ -7,20 +7,14 @@ namespace KittyShare\Http;
  */
 class Request
 {
-    private string $method;
-    private string $uri;
-
-    private array $parameters;
-
-    public function __construct(array $parameters)
-    {
-        $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-
-        $this->parameters = $parameters;
+    public function __construct(
+        private Method $method,
+        private string $uri,
+        private array $parameters,
+    ) {
     }
 
-    public function getMethod(): string
+    public function getMethod(): Method
     {
         return $this->method;
     }
