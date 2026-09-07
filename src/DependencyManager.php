@@ -22,9 +22,9 @@ class DependencyManager
         $database = new SQLiteDatabase(__DIR__ . '/../database.sqlite');
 
         return new Dependencies(
-            user_repository: new SQLiteUserRepository($database->getInstance()),
-            setup_repository: new SQLiteSetupRepository($database->getInstance()),
-            session_repository: new SQLiteSessionRepository($database->getInstance()),
+            userRepository: new SQLiteUserRepository($database->getInstance()),
+            setupRepository: new SQLiteSetupRepository($database->getInstance()),
+            sessionRepository: new SQLiteSessionRepository($database->getInstance()),
         );
     }
 }

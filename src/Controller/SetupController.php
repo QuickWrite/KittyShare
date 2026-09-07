@@ -15,7 +15,7 @@ class SetupController extends BaseController
     #[Override]
     public function handle(Request $request): Response
     {
-        if (!$this->dependencies->getSetupRepository()->setupRequired()) {
+        if (!$this->dependencies->setupRepository->setupRequired()) {
             return new RedirectResponse('/login');
         }
 
@@ -67,7 +67,7 @@ class SetupController extends BaseController
         }
 
         // Create admin user
-        $this->dependencies->getUserRepository()->createUser($username, $password);
+        $this->dependencies->userRepository->createUser($username, $password);
 
         return new RedirectResponse('/login');
     }
