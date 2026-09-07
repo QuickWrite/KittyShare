@@ -2,27 +2,13 @@
 
 namespace KittyShare\Model;
 
-class User
+final readonly class User extends UserIdentity
 {
     public function __construct(
-        private int $userId,
-        private string $username,
-        private string $passwordHash,
+        int $userId,
+        string $username,
+        public string $passwordHash,
     ) {
-    }
-
-    public function getUserId(): int
-    {
-        return $this->userId;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function getPasswordHash(): string
-    {
-        return $this->passwordHash;
+        parent::__construct($userId, $username);
     }
 }
