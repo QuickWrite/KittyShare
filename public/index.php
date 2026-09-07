@@ -2,18 +2,29 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use KittyShare\Controller\{AdminController, LoginController, SetupController, ShareController};
 use KittyShare\DependencyManager;
 use KittyShare\Http\{Router, Method};
-use KittyShare\Controller\SetupController;
 
 $dependencies = DependencyManager::get();
 
 $router = new Router($dependencies);
 
+// Logging into the admin page
+$router->get('/login', LoginController::class);
+$router->post('/login', LoginController::class);
 
+// The admin page that allows for the creation of links
+$router->get('/admin', AdminController::class);
+$router->post('/admin', AdminController::class);
 
+// The setup page to create the first admin account
 $router->get('/setup', SetupController::class);
 $router->post('/setup', SetupController::class);
+
+// The actual link sharing endpoints
+$router->get('/share/{id}', ShareController::class);
+$router->get('/share/{id}/{...path}', ShareController::class);
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
