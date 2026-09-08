@@ -28,8 +28,8 @@ class MigrationV3 implements Migration
         ');
 
         $pdo->exec('
-            CREATE INDEX IF NOT EXISTS idx_sessions_userId
-            ON sessions(userId);
+            CREATE INDEX IF NOT EXISTS idx_shares_userId
+            ON shares(userId);
         ');
     }
 }

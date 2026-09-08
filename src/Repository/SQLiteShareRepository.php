@@ -47,7 +47,7 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
                 u.username
             FROM shares s
             INNER JOIN users u ON u.id = s.userId
-            WHERE shares.id = :id;
+            WHERE s.id = :id;
         ');
 
         $stmt->execute([
