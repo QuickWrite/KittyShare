@@ -20,7 +20,7 @@ final readonly class Share
     public function isExpired(): bool
     {
         return $this->expiresAt !== null
-            && $this->expiresAt <= time();
+            && $this->expiresAt->getTimestamp() <= time();
     }
 
     public function isRevoked(): bool

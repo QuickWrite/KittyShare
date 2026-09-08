@@ -33,7 +33,9 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
             user: $user,
             filepath: $fetched['filepath'],
             createdAt: (new DateTimeImmutable())->setTimestamp((int) $fetched['createdAt']),
-            expiresAt: $expiresAt,
+            expiresAt: $expiresAt instanceof DateTimeImmutable
+                        ? $expiresAt
+                        : ($expiresAt !== null ? DateTimeImmutable::createFromInterface($expiresAt) : null),
             revokedAt: null,
         );
     }
