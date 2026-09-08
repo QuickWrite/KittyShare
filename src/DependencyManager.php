@@ -2,7 +2,7 @@
 
 namespace KittyShare;
 
-use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase, SQLiteSessionRepository, SQLiteSetupRepository};
+use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase, SQLiteSessionRepository, SQLiteSetupRepository, SQLiteShareRepository};
 
 class DependencyManager
 {
@@ -25,6 +25,7 @@ class DependencyManager
             userRepository: new SQLiteUserRepository($database->getInstance()),
             setupRepository: new SQLiteSetupRepository($database->getInstance()),
             sessionRepository: new SQLiteSessionRepository($database->getInstance()),
+            shareRepository: new SQLiteShareRepository($database->getInstance()),
         );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace KittyShare;
 
-use KittyShare\Repository\{SessionRepository, UserRepository, SetupRepository};
+use KittyShare\Repository\{SessionRepository, UserRepository, SetupRepository, ShareRepository};
 
 final readonly class Dependencies
 {
@@ -10,6 +10,7 @@ final readonly class Dependencies
         public UserRepository $userRepository,
         public SetupRepository $setupRepository,
         public SessionRepository $sessionRepository,
+        public ShareRepository $shareRepository,
     ) {
     }
 }
