@@ -2,6 +2,7 @@
 
 namespace KittyShare;
 
+use KittyShare\Manager\AuthenticationManager;
 use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase, SQLiteSessionRepository, SQLiteSetupRepository, SQLiteShareRepository};
 
 class DependencyManager
@@ -21,11 +22,18 @@ class DependencyManager
     {
         $database = new SQLiteDatabase(__DIR__ . '/../database.sqlite');
 
+        $userRepository = new SQLiteUserRepository($database->getInstance());
+        $setupRepository = new SQLiteSetupRepository($database->getInstance());
+        $sessionRepository = new SQLiteSessionRepository($database->getInstance());
+        $shareRepository = new SQLiteShareRepository($database->getInstance());
+        $authenticationManager = new AuthenticationManager($userRepository, $sessionRepository);
+
         return new Dependencies(
-            userRepository: new SQLiteUserRepository($database->getInstance()),
-            setupRepository: new SQLiteSetupRepository($database->getInstance()),
-            sessionRepository: new SQLiteSessionRepository($database->getInstance()),
-            shareRepository: new SQLiteShareRepository($database->getInstance()),
+            userRepository: $userRepository,
+            setupRepository: $setupRepository,
+            sessionRepository: $sessionRepository,
+            shareRepository: $shareRepository,
+            authenticationManager: $authenticationManager,
         );
     }
 }

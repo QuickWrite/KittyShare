@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use KittyShare\Controller\{AdminController, LoginController, SetupController, ShareController};
+use KittyShare\Controller\{AdminController, LoginController, LogoutController, SetupController, ShareController};
 use KittyShare\DependencyManager;
 use KittyShare\Http\{Router, Method};
 
@@ -13,6 +13,9 @@ $router = new Router($dependencies);
 // Logging into the admin page
 $router->get('/login', LoginController::class);
 $router->post('/login', LoginController::class);
+
+// Logging out of the application
+$router->post('/logout', LogoutController::class);
 
 // The admin page that allows for the creation of links
 $router->get('/admin', AdminController::class);
