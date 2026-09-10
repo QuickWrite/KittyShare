@@ -44,4 +44,16 @@ final readonly class Share
             revokedAt: (new DateTimeImmutable())->setTimestamp((int) time()),
         );
     }
+
+    public function unrevoke(): self
+    {
+        return new self(
+            id: $this->id,
+            user: $this->user,
+            filepath: $this->filepath,
+            createdAt: $this->createdAt,
+            expiresAt: $this->expiresAt,
+            revokedAt: null,
+        );
+    }
 }

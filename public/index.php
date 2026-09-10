@@ -21,6 +21,19 @@ $router->post('/logout', LogoutController::class);
 $router->get('/admin', AdminController::class);
 $router->post('/admin', AdminController::class);
 
+// The admin file picker for creating shares
+$router->get('/admin/browse', AdminController::class);
+$router->get('/admin/browse/{...path}', AdminController::class);
+
+// Managing and creating shares
+$router->get('/admin/shares/new', AdminController::class);
+$router->get('/admin/shares/{id}', AdminController::class);
+
+$router->post('/admin/shares', AdminController::class);
+$router->post('/admin/shares/{id}/revoke', AdminController::class);
+$router->post('/admin/shares/{id}/unrevoke', AdminController::class);
+$router->post('/admin/shares/{id}/delete', AdminController::class);
+
 // The setup page to create the first admin account
 $router->get('/setup', SetupController::class);
 $router->post('/setup', SetupController::class);
