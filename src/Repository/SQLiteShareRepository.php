@@ -14,13 +14,16 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
     #[Override]
     public function create(UserIdentity $user, string $filepath, ?DateTimeInterface $expiresAt = null): Share
     {
+        $shareId = bin2hex(random_bytes(16));
+
         $stmt = $this->pdo->prepare('
-            INSERT INTO shares (userId, filepath, expiresAt)
-            VALUES (:userId, :filepath, :expiresAt)
+            INSERT INTO shares (id, userId, filepath, expiresAt)
+            VALUES (:id, :userId, :filepath, :expiresAt)
             RETURNING *;
         ');
 
         $stmt->execute([
+            'id' => $shareId,
             'userId' => $user->userId,
             'filepath' => $filepath,
             'expiresAt' => $expiresAt?->getTimestamp(),
