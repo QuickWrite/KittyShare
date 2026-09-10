@@ -123,10 +123,19 @@ final class Router
             return null;
         }
 
-        return array_intersect_key(
+        $parameters = array_intersect_key(
             $matches,
             array_flip(array_filter(array_keys($matches), 'is_string')),
         );
+
+        // Templates encode path segments with rawurlencode, so decode them
+        // here. rawurldecode (not urldecode) is required so that a literal
+        // "+" in a file name is preserved instead of becoming a space.
+        foreach ($parameters as $key => $value) {
+            $parameters[$key] = rawurldecode($value);
+        }
+
+        return $parameters;
     }
 
     /**
