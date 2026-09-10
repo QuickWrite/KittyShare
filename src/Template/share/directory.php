@@ -11,14 +11,7 @@
  */
 ?>
 <?php
-function e(string $value): string
-{
-    return htmlspecialchars(
-        $value,
-        ENT_QUOTES | ENT_SUBSTITUTE,
-        'UTF-8',
-    );
-}
+require_once __DIR__ . '/../partials/base.php';
 
 function encodePath(string $path): string
 {
@@ -29,15 +22,9 @@ function encodePath(string $path): string
 }
 
 $shareUrl = '/share/' . rawurlencode((string) $share->id);
+
+renderHeader("Shared directory " . $base);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shared directory <?= e($base) ?> | KittyShare</title>
-</head>
-<body>
 <main>
     <h1>Share of <?= e($base) ?></h1>
 
@@ -61,5 +48,5 @@ $shareUrl = '/share/' . rawurlencode((string) $share->id);
         <a href="<?= e($shareUrl) ?>">Back to root</a>
     </p>
 </main>
-</body>
-</html>
+<?php
+renderFooter();
