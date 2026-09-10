@@ -20,11 +20,13 @@ class DependencyManager
 
     private static function constructDependencies(): Dependencies
     {
-        $database = new SQLiteDatabase(__DIR__ . '/../database.sqlite');
+        $config = ConfigManager::get();
+
+        $database = new SQLiteDatabase($config->databasePath);
 
         $userRepository = new SQLiteUserRepository($database->getInstance());
         $setupRepository = new SQLiteSetupRepository($database->getInstance());
-        $sessionRepository = new SQLiteSessionRepository($database->getInstance());
+        $sessionRepository = new SQLiteSessionRepository($database->getInstance(), $config->sessionLifetime);
         $shareRepository = new SQLiteShareRepository($database->getInstance());
         $authenticationManager = new AuthenticationManager($userRepository, $sessionRepository);
 

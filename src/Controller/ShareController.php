@@ -3,6 +3,7 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Http\{Request, Response, TemplateResponse, FileResponse};
+use KittyShare\ConfigManager;
 use KittyShare\Filesystem\DirectoryBrowser;
 use KittyShare\Model\Share;
 use Override;
@@ -145,6 +146,7 @@ final class ShareController extends BaseController
                 'entries' => DirectoryBrowser::listDirectory(
                     $directoryPath,
                     $relativePath,
+                    ConfigManager::get()->showDotfiles,
                 ),
             ]
         );
@@ -166,6 +168,8 @@ final class ShareController extends BaseController
             $contentType !== false
                 ? $contentType
                 : 'application/octet-stream',
+            200,
+            ConfigManager::get()->downloadChunkSize,
         );
     }
 

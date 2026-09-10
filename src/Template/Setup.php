@@ -24,7 +24,7 @@ renderHeader("Setup Application");
     <h1>Setup Application</h1>
     <form method="post">
         <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="John Doe" value="<?= $values['username'] ?? '' ?>" required />
+        <input type="text" id="username" name="username" placeholder="John Doe" value="<?= e($values['username'] ?? '') ?>" required />
         <?= print_error('Username', $errors['username'] ?? null) ?>
 
         <label for="password">Password</label>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Shared directory listing partial (no CSS/JS).
+ * Shared directory listing
  *
  * @var string $baseUrl
  * @var list<array{

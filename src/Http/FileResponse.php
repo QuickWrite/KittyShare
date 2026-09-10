@@ -11,11 +11,13 @@ final class FileResponse implements Response
      * @param string $file        The path to the file to send.
      * @param string $contentType The MIME type of the file.
      * @param int    $statusCode  The HTTP status code to send.
+     * @param int    $chunkSize   The number of bytes sent per chunk.
      */
     public function __construct(
         private string $file,
         private string $contentType,
         private int $statusCode = 200,
+        private int $chunkSize = 8192,
     ) {
     }
 
@@ -62,7 +64,7 @@ final class FileResponse implements Response
         header('Content-Security-Policy: sandbox');
 
         while (!feof($handle)) {
-            $chunk = fread($handle, 8192);
+            $chunk = fread($handle, $this->chunkSize);
 
             if ($chunk === false) {
                 break;

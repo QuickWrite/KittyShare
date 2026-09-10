@@ -9,13 +9,19 @@ use DateTimeImmutable;
 
 final class SQLiteSessionRepository extends AbstractSQLiteRepository implements SessionRepository
 {
+    public function __construct(
+        PDO $pdo,
+        private readonly int $sessionLifetime = 60 * 60 * 24 * 30,
+    ) {
+        parent::__construct($pdo);
+    }
+
     #[Override]
     public function create(UserIdentity $user): Session
     {
         $sessionId = bin2hex(random_bytes(32));
 
-        // Expires in 30 days
-        $expiresAt = time() + 60 * 60 * 24 * 30;
+        $expiresAt = time() + $this->sessionLifetime;
 
         $stmt = $this->pdo->prepare('
             INSERT INTO sessions (id, userId, expiresAt)

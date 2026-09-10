@@ -2,6 +2,8 @@
 
 namespace KittyShare\Filesystem;
 
+use KittyShare\ConfigManager;
+
 use function is_dir;
 use function ltrim;
 use function realpath;
@@ -20,13 +22,12 @@ final class DirectoryBrowser
 {
     /**
      * Returns the filesystem root the admin file picker may browse.
+     *
+     * Configured centrally via {@see \KittyShare\Config}.
      */
     public static function browseRoot(): string
     {
-        // TODO: make the browse root server-configured via environment variables (e.g. KITTYSHARE_ROOT).
-        $root = realpath('/');
-
-        return $root !== false ? $root : '/';
+        return ConfigManager::get()->browseRoot;
     }
 
     /**
@@ -121,6 +122,7 @@ final class DirectoryBrowser
      *
      * @param string $directoryPath The canonical absolute directory path.
      * @param string $relativePath  The directory path relative to the root.
+     * @param bool   $showDotfiles  Whether entries starting with a dot are listed.
      *
      * @return list<array{
      *     name: string,
@@ -131,6 +133,7 @@ final class DirectoryBrowser
     public static function listDirectory(
         string $directoryPath,
         string $relativePath,
+        bool $showDotfiles = false,
     ): array {
         $entries = scandir($directoryPath);
 
@@ -142,6 +145,10 @@ final class DirectoryBrowser
 
         foreach ($entries as $entry) {
             if ($entry === '.' || $entry === '..') {
+                continue;
+            }
+
+            if (!$showDotfiles && str_starts_with($entry, '.')) {
                 continue;
             }
 

@@ -3,6 +3,7 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Filesystem\DirectoryBrowser;
+use KittyShare\ConfigManager;
 use KittyShare\Http\{Method, Request, Response};
 use KittyShare\Http\{TemplateResponse, RedirectResponse};
 use KittyShare\Model\Share;
@@ -112,7 +113,7 @@ final class AdminController extends BaseController
             return new TemplateResponse('404', ['path' => $request->getUri()], 404);
         }
 
-        return new TemplateResponse('admin/shares-detail', ['share' => $share]);
+        return new TemplateResponse('admin/shares-detail', ['share' => $share, 'baseUrl' => ConfigManager::get()->baseUrl]);
     }
 
     private function revoke(Request $request): Response
@@ -183,7 +184,7 @@ final class AdminController extends BaseController
                 'root' => $root,
                 'directoryPath' => $directoryPath,
                 'relativePath' => $relativePath,
-                'entries' => DirectoryBrowser::listDirectory($directoryPath, $relativePath),
+                'entries' => DirectoryBrowser::listDirectory($directoryPath, $relativePath, ConfigManager::get()->showDotfiles),
             ]
         );
     }

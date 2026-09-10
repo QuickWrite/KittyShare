@@ -1,10 +1,17 @@
 <?php
 /**
  * @var \KittyShare\Model\Share $share
+ * @var string|null $baseUrl
  */
 ?>
 <?php
 require_once __DIR__ . '/../partials/base.php';
+
+$shareLink = '/share/' . rawurlencode($share->id);
+
+if (($baseUrl ?? null) !== null && $baseUrl !== '') {
+    $shareLink = $baseUrl . $shareLink;
+}
 
 renderHeader("Manage share");
 ?>
@@ -12,7 +19,7 @@ renderHeader("Manage share");
     <h1>Manage share</h1>
 
     <p>
-        Link: <a href="/share/<?= e($share->id) ?>">/share/<?= e($share->id) ?></a>
+        Link: <a href="<?= e($shareLink) ?>"><?= e($shareLink) ?></a>
     </p>
 
     <p>Path: <?= e($share->filepath) ?></p>
