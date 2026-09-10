@@ -3,6 +3,7 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Http\{Method, RedirectResponse, Request, Response, TemplateResponse};
+use KittyShare\Http\Session;
 use Override;
 
 use function count;
@@ -19,8 +20,6 @@ class SetupController extends BaseController
             return new RedirectResponse('/login');
         }
 
-        session_start();
-
         return match ($request->getMethod()) {
             Method::Get => $this->handleGet($request),
             Method::Post => $this->handlePost($request),
@@ -30,10 +29,8 @@ class SetupController extends BaseController
 
     private function handleGet(Request $request): Response
     {
-        $errors = $_SESSION[self::$errorsKey] ?? [];
-        $values = $_SESSION[self::$valuesKey] ?? [];
-
-        unset($_SESSION[self::$errorsKey], $_SESSION[self::$valuesKey]);
+        $errors = Session::pull(self::$errorsKey, []);
+        $values = Session::pull(self::$valuesKey, []);
 
         return new TemplateResponse(
             'Setup',
@@ -60,8 +57,8 @@ class SetupController extends BaseController
         }
 
         if (count($errors) > 0) {
-            $_SESSION[self::$valuesKey] = [ 'username' => $username ];
-            $_SESSION[self::$errorsKey] = $errors;
+            Session::set(self::$valuesKey, [ 'username' => $username ]);
+            Session::set(self::$errorsKey, $errors);
 
             return new RedirectResponse('/setup');
         }

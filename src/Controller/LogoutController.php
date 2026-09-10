@@ -11,8 +11,6 @@ final class LogoutController extends BaseController
     #[Override]
     public function handle(Request $request): Response
     {
-        session_start();
-
         $this->dependencies->authenticationManager->logout();
 
         return new RedirectResponse('/login');

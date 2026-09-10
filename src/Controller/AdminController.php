@@ -20,8 +20,6 @@ final class AdminController extends BaseController
     #[Override]
     public function handle(Request $request): Response
     {
-        session_start();
-
         $session = $this->dependencies->authenticationManager->currentSession();
 
         if ($session === null) {

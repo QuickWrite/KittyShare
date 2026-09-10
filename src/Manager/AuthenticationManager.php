@@ -3,6 +3,7 @@
 namespace KittyShare\Manager;
 
 use KittyShare\Repository\{SessionRepository, UserRepository};
+use KittyShare\Http\Session as HttpSession;
 use KittyShare\Model\Session;
 
 /**
@@ -56,11 +57,11 @@ final class AuthenticationManager
             return null;
         }
 
-        session_regenerate_id(true);
+        HttpSession::regenerate();
 
         $session = $this->sessionRepository->create($user);
 
-        $_SESSION[self::SESSION_KEY] = $session->id;
+        HttpSession::set(self::SESSION_KEY, $session->id);
 
         return $session;
     }
@@ -77,7 +78,7 @@ final class AuthenticationManager
      */
     public function currentSession(): ?Session
     {
-        $id = $_SESSION[self::SESSION_KEY] ?? null;
+        $id = HttpSession::get(self::SESSION_KEY);
 
         if ($id === null) {
             return null;
@@ -86,7 +87,7 @@ final class AuthenticationManager
         $session = $this->sessionRepository->find($id);
 
         if ($session === null || $session->isExpired()) {
-            unset($_SESSION[self::SESSION_KEY]);
+            HttpSession::remove(self::SESSION_KEY);
 
             return null;
         }
@@ -106,7 +107,7 @@ final class AuthenticationManager
      */
     public function logout(): void
     {
-        $id = $_SESSION[self::SESSION_KEY] ?? null;
+        $id = HttpSession::get(self::SESSION_KEY);
 
         if ($id !== null) {
             $session = $this->sessionRepository->find($id);
@@ -116,7 +117,7 @@ final class AuthenticationManager
             }
         }
 
-        unset($_SESSION[self::SESSION_KEY]);
+        HttpSession::remove(self::SESSION_KEY);
     }
 }
 

@@ -4,6 +4,7 @@ namespace KittyShare\Controller;
 
 use KittyShare\Http\{Request, Response, Method};
 use KittyShare\Http\{RedirectResponse, TemplateResponse};
+use KittyShare\Http\Session;
 use Override;
 
 final class LoginController extends BaseController
@@ -18,8 +19,6 @@ final class LoginController extends BaseController
             return new RedirectResponse('/setup');
         }
 
-        session_start();
-
         if ($this->dependencies->authenticationManager->currentSession() !== null) {
             return new RedirectResponse('/admin');
         }
@@ -33,13 +32,8 @@ final class LoginController extends BaseController
 
     private function handleGet(): Response
     {
-        $errors = $_SESSION[self::$errorsKey] ?? [];
-        $values = $_SESSION[self::$valuesKey] ?? [];
-
-        unset(
-            $_SESSION[self::$errorsKey],
-            $_SESSION[self::$valuesKey],
-        );
+        $errors = Session::pull(self::$errorsKey, []);
+        $values = Session::pull(self::$valuesKey, []);
 
         return new TemplateResponse(
             'Login',
@@ -66,10 +60,10 @@ final class LoginController extends BaseController
         }
 
         if ($errors !== []) {
-            $_SESSION[self::$errorsKey] = $errors;
-            $_SESSION[self::$valuesKey] = [
+            Session::set(self::$errorsKey, $errors);
+            Session::set(self::$valuesKey, [
                 'username' => $username,
-            ];
+            ]);
 
             return new RedirectResponse('/login');
         }
@@ -80,12 +74,12 @@ final class LoginController extends BaseController
         );
 
         if ($session === null) {
-            $_SESSION[self::$errorsKey] = [
+            Session::set(self::$errorsKey, [
                 'credentials' => 'invalid',
-            ];
-            $_SESSION[self::$valuesKey] = [
+            ]);
+            Session::set(self::$valuesKey, [
                 'username' => $username,
-            ];
+            ]);
 
             return new RedirectResponse('/login');
         }
