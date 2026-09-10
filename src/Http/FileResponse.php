@@ -21,14 +21,46 @@ final class FileResponse implements Response
 
     /**
      * Sends the file to the client.
+     *
+     * The file is streamed in small chunks so that files larger than the
+     * PHP memory limit can be sent.
      */
     public function send(): void
     {
+        $handle = @fopen($this->file, 'rb');
+
+        if ($handle === false) {
+            http_response_code(404);
+
+            return;
+        }
+
+        $stat = fstat($handle);
+        $size = $stat !== false ? $stat['size'] : false;
+
         http_response_code($this->statusCode);
 
         header("Content-Type: {$this->contentType}");
-        header('Content-Length: ' . filesize($this->file));
 
-        readfile($this->file);
+        if ($size !== false) {
+            header('Content-Length: ' . $size);
+        }
+
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        while (!feof($handle)) {
+            $chunk = fread($handle, 8192);
+
+            if ($chunk === false) {
+                break;
+            }
+
+            echo $chunk;
+            flush();
+        }
+
+        fclose($handle);
     }
 }
