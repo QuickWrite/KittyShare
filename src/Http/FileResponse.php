@@ -38,6 +38,16 @@ final class FileResponse implements Response
         $stat = fstat($handle);
         $size = $stat !== false ? $stat['size'] : false;
 
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        if (headers_sent()) {
+            fclose($handle);
+
+            return;
+        }
+
         http_response_code($this->statusCode);
 
         header("Content-Type: {$this->contentType}");
@@ -46,9 +56,10 @@ final class FileResponse implements Response
             header('Content-Length: ' . $size);
         }
 
-        while (ob_get_level() > 0) {
-            ob_end_clean();
-        }
+        // Prevent MIME sniffing and script execution when the browser
+        // renders a shared HTML/SVG file inline.
+        header('X-Content-Type-Options: nosniff');
+        header('Content-Security-Policy: sandbox');
 
         while (!feof($handle)) {
             $chunk = fread($handle, 8192);
