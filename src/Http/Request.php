@@ -7,6 +7,11 @@ namespace KittyShare\Http;
  */
 class Request
 {
+    /**
+     * @param Method                $method
+     * @param string                $uri
+     * @param array<string, string> $parameters
+     */
     public function __construct(
         private Method $method,
         private string $uri,
@@ -24,11 +29,9 @@ class Request
         return $this->uri;
     }
 
-    public function getParams(): array
-    {
-        return $_GET;
-    }
-
+    /**
+     * @return array<string, string>
+     */
     public function getUrlParams(): array
     {
         return $this->parameters;
@@ -39,13 +42,29 @@ class Request
         return $this->parameters[$key] ?? $default;
     }
 
-    public function get(string $key, $default = null)
+    public function get(string $key, ?string $default = null): ?string
     {
+        // I am just assuming the $_GET is an array of strings to strings. Which is not the case.
+        if (!is_string($_GET[$key])) {
+            return $default;
+        }
+
+        /**
+         * @var array<string, string> $_POST
+         */
         return $_GET[$key] ?? $default;
     }
 
-    public function post(string $key, $default = null)
+    public function post(string $key, ?string $default = null): ?string
     {
+        // I am just assuming the $_POST is an array of strings to strings. Which is not the case.
+        if (!is_string($_POST[$key])) {
+            return $default;
+        }
+
+        /**
+         * @var array<string, string> $_POST
+         */
         return $_POST[$key] ?? $default;
     }
 }

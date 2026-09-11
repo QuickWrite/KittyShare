@@ -8,7 +8,7 @@ function e(string $value): string
     );
 }
 
-function renderHeader(string $title) {
+function renderHeader(string $title): void {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +21,7 @@ function renderHeader(string $title) {
 <?php
 }
 
-function renderFooter() {
+function renderFooter(): void {
 ?>
 </body>
 </html>

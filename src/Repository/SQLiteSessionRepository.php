@@ -31,6 +31,9 @@ final class SQLiteSessionRepository extends AbstractSQLiteRepository implements 
 
         $stmt->execute([ 'id' => $sessionId, 'userId' => $user->userId, 'expiresAt' => $expiresAt ]);
 
+        /**
+         * @var array{'id': string, 'userId': int, 'expiresAt': int} $fetched
+         */
         $fetched = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return new Session(
@@ -56,6 +59,9 @@ final class SQLiteSessionRepository extends AbstractSQLiteRepository implements 
 
         $stmt->execute([ 'id' => $id ]);
 
+        /**
+         * @var false|array{'sessionId': string, 'userId': int, 'username': string, 'expiresAt': int} $fetched
+         */
         $fetched = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($fetched === false) {

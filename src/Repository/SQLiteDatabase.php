@@ -6,6 +6,9 @@ use KittyShare\Repository\Migration\Migration;
 use PDO;
 use Exception;
 
+use function count;
+use function assert;
+
 final class SQLiteDatabase
 {
     private static string $migration_namespace = 'KittyShare\\Repository\\Migration\\sqlite';
@@ -38,13 +41,25 @@ final class SQLiteDatabase
     private static function migrateSchema(PDO $pdo): void
     {
         $migrationsDir = __DIR__ . '/Migration/sqlite';
-        $version = (int) $pdo->query('PRAGMA user_version')->fetchColumn();
+
+        $versionQuery = $pdo->query('PRAGMA user_version');
+        assert($versionQuery !== false, "Could not execute query to check version.");
+
+        $version = (int) $versionQuery->fetchColumn();
 
         $files = glob("$migrationsDir/V*_*.php");
+        
+        // Currently it should only fail silently. Maybe this should change later on.
+        if (!$files) {
+            $files = [];
+        }
+
         sort($files);
 
         foreach ($files as $file) {
             preg_match('/V(\d+)_/', basename($file), $m);
+            assert(count($m) === 2, "The matched values should not be empty");
+
             $fileVersion = (int) $m[1];
 
             if ($fileVersion <= $version) {
@@ -65,9 +80,12 @@ final class SQLiteDatabase
                 $pdo->exec('COMMIT');
             } catch (Exception $e) {
                 $pdo->exec('ROLLBACK');
+                throw $e;
             }
 
-            $version = (int) $pdo->query('PRAGMA user_version')->fetchColumn();
+            $versionQuery = $pdo->query('PRAGMA user_version');
+            assert($versionQuery !== false, "Could not execute query to check version.");
+            $version = (int) $versionQuery->fetchColumn();
         }
     }
 }

@@ -42,12 +42,23 @@ $router->post('/setup', SetupController::class);
 $router->get('/share/{id}', ShareController::class);
 $router->get('/share/{id}/{...path}', ShareController::class);
 
+/**
+ * @var array{
+ *  'REQUEST_URI': string,
+ *  'REQUEST_METHOD': string,
+ * } $_SERVER
+ */
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 $method = Method::tryFrom($_SERVER['REQUEST_METHOD']);
 
 if ($method === null) {
     http_response_code(405);
+    exit;
+}
+
+if (!is_string($path)) {
+    http_response_code(500);
     exit;
 }
 

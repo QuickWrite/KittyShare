@@ -10,6 +10,9 @@ use KittyShare\Dependencies;
  */
 final class Router
 {
+    /**
+     * @var array<string, array<string, string>> $routes
+     */
     private array $routes = [];
 
     public function __construct(
@@ -72,6 +75,9 @@ final class Router
                 continue;
             }
 
+            /**
+             * @var \KittyShare\Controller\BaseController $controller
+             */
             $controller = new $controllerName($this->dependencies);
 
             return $controller->handle(
@@ -95,10 +101,10 @@ final class Router
     /**
      * Matches a path against a pattern and returns the captured parameters.
      *
-     * @param string $pattern The pattern to match against, e.g. /users/{id}
-     * @param string $path    The path to match, e.g. /users/123
-     * @return array|null     An array of captured parameters if the path matches the pattern,
-     *                        or null if it does not match.
+     * @param string $pattern              The pattern to match against, e.g. /users/{id}
+     * @param string $path                 The path to match, e.g. /users/123
+     * @return array<string, string>|null  An array of captured parameters if the path matches the pattern,
+     *                                     or null if it does not match.
      */
     private function match(string $pattern, string $path): ?array
     {

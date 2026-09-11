@@ -80,7 +80,7 @@ final class AuthenticationManager
     {
         $id = HttpSession::get(self::SESSION_KEY);
 
-        if ($id === null) {
+        if ($id === null || !is_string($id)) {
             return null;
         }
 
@@ -109,7 +109,7 @@ final class AuthenticationManager
     {
         $id = HttpSession::get(self::SESSION_KEY);
 
-        if ($id !== null) {
+        if ($id !== null && is_string($id)) {
             $session = $this->sessionRepository->find($id);
 
             if ($session !== null) {

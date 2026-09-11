@@ -22,7 +22,7 @@ final class ConfigManager {
             browseRoot: self::resolveBrowseRoot(
                 self::env('KITTYSHARE_ROOT')
             ),
-            sessionLifetime: self::envInt(
+            sessionLifetime: self::envPosInt(
                 'KITTYSHARE_SESSION_LIFETIME',
                 60 * 60 * 24 * 30,
             ),
@@ -30,7 +30,7 @@ final class ConfigManager {
             cookieSecure: self::envBoolOrNull('KITTYSHARE_COOKIE_SECURE'),
             showDotfiles: self::envBool('KITTYSHARE_SHOW_DOTFILES', false),
             baseUrl: self::baseUrl(),
-            downloadChunkSize: self::envInt(
+            downloadChunkSize: self::envPosInt(
                 'KITTYSHARE_DOWNLOAD_CHUNK_SIZE',
                 8192,
             ),
@@ -65,9 +65,11 @@ final class ConfigManager {
     /**
      * Reads a positive integer setting in seconds/bytes.
      *
-     * @return int The configured value, or $default when unset or invalid.
+     * @param string        $name    The name of the value
+     * @param positive-int  $default The default value
+     * @return positive-int The configured value, or $default when unset or invalid.
      */
-    private static function envInt(string $name, int $default): int
+    private static function envPosInt(string $name, int $default): int
     {
         $value = self::env($name);
 
@@ -115,7 +117,7 @@ final class ConfigManager {
     }
 
     /**
-     * @return string One of Lax, Strict or None; Lax when unset or invalid.
+     * @return 'Lax'|'Strict'|'None' One of Lax, Strict or None; Lax when unset or invalid.
      */
     private static function cookieSameSite(): string
     {

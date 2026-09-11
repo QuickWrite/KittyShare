@@ -2,11 +2,21 @@
 
 namespace KittyShare;
 
-/**
- * Centralized, typesafe application configuration.
- */
+
 final readonly class Config
 {
+    /**
+     * Centralized, typesafe application configuration.
+     * 
+     * @param string $databasePath
+     * @param string $browseRoot
+     * @param positive-int $sessionLifetime
+     * @param 'Lax'|'Strict'|'None' $cookieSameSite
+     * @param ?bool $cookieSecure
+     * @param bool $showDotfiles
+     * @param ?string $baseUrl
+     * @param positive-int $downloadChunkSize
+     */
     public function __construct(
         /** Path to the SQLite database file. */
         public string $databasePath,

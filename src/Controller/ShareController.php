@@ -21,6 +21,10 @@ final class ShareController extends BaseController
         $id = $request->urlParam('id');
         $path = $request->urlParam('path');
 
+        if ($id === null) {
+            return $this->notFound();
+        }
+
         $share = $this->dependencies->shareRepository->find($id);
 
         if ($share === null || !$share->isActive()) {

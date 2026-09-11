@@ -1,23 +1,19 @@
 <?php
+
+/**
+ * @var ?array{
+ *        'username'?: 'empty'|'invalid',
+ *        'password'?: 'empty'|'invalid',
+ *        'credentials'?: 'invalid'
+ * }                               $errors The errors that are currently present
+ * @var ?array{'username'?: string} $values The values the user has provided before
+ */
+
 $errors ??= [];
 $values ??= [];
 
-function print_error(string $field, ?string $error): string
-{
-    if ($error === null) {
-        return '';
-    }
-
-    $message = match ($error) {
-        'empty' => "$field cannot be empty.",
-        'invalid' => 'The username or password is incorrect.',
-        default => "$field is invalid.",
-    };
-
-    return "<span class=\"error\">$message</span>";
-}
-
 require_once __DIR__ . '/partials/base.php';
+require_once __DIR__ . '/util/error.php';
 
 renderHeader("Login");
 ?>
@@ -33,8 +29,7 @@ renderHeader("Login");
             placeholder="John Doe"
             value="<?= e($values['username'] ?? '') ?>"
             autocomplete="username"
-            required
-        />
+            required />
         <?= print_error('Username', $errors['username'] ?? null) ?>
 
         <label for="password">Password</label>
@@ -43,8 +38,7 @@ renderHeader("Login");
             id="password"
             name="password"
             autocomplete="current-password"
-            required
-        />
+            required />
         <?= print_error('Password', $errors['password'] ?? null) ?>
 
         <?php if (isset($errors['credentials'])): ?>

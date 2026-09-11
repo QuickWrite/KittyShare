@@ -20,8 +20,11 @@ final class SQLiteUserRepository extends AbstractSQLiteRepository implements Use
             WHERE u.username = :username;
         ');
 
-        $stmt->execute([ 'username' => $username ]);
+        $stmt->execute(['username' => $username]);
 
+        /**
+         * @var false|array{'id': int|string, 'username': string, 'passwordHash': string} $result
+         */
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!is_array($result)) {
@@ -42,15 +45,25 @@ final class SQLiteUserRepository extends AbstractSQLiteRepository implements Use
             RETURNING *;
         ');
 
-        $stmt->execute([ 'username' => $username, 'passwordHash' => $passwordHash]);
+        $stmt->execute(['username' => $username, 'passwordHash' => $passwordHash]);
 
-        return self::dbToUser($stmt->fetch(PDO::FETCH_ASSOC));
+        /**
+         * @var array{'id': int|string, 'username': string, 'passwordHash': string} $result
+         */
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return self::dbToUser($result);
     }
 
+    /**
+     * Converts a database row into a User object
+     * 
+     * @param array{'id': int|string, 'username': string, 'passwordHash': string} $fetched The fetched row
+     * @return User The converted user object
+     */
     private static function dbToUser(array $fetched): User
     {
         return new User(
-            userId: $fetched['id'],
+            userId: (int) $fetched['id'],
             username: $fetched['username'],
             passwordHash: $fetched['passwordHash'],
         );

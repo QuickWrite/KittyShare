@@ -29,6 +29,16 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
             'expiresAt' => $expiresAt?->getTimestamp(),
         ]);
 
+        /**
+         * @var array{
+         *          'id': string,
+         *          'userId': int,
+         *          'filepath': string,
+         *          'createdAt': int,
+         *          'expiresAt': ?int,
+         *          'revokedAt': ?int,
+         * } $fetched
+         */
         $fetched = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return new Share(
@@ -59,6 +69,17 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
             'id' => $id,
         ]);
 
+        /**
+         * @var false|array{
+         *          'id': string,
+         *          'userId': int,
+         *          'username': string,
+         *          'filepath': string,
+         *          'createdAt': int,
+         *          'expiresAt': ?int,
+         *          'revokedAt': ?int,
+         * } $fetched
+         */
         $fetched = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($fetched === false) {
@@ -68,6 +89,10 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
         return $this->rowToShare($fetched);
     }
 
+    /**
+     * @param UserIdentity $user
+     * @return list<Share> The shares of the user
+     */
     #[Override]
     public function findByUser(UserIdentity $user): array
     {
@@ -88,6 +113,17 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
         $shares = [];
 
         while ($fetched = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            /**
+            * @var array{
+            *          'id': string,
+            *          'userId': int,
+            *          'username': string,
+            *          'filepath': string,
+            *          'createdAt': int,
+            *          'expiresAt': ?int,
+            *          'revokedAt': ?int,
+            * } $fetched
+            */
             $shares[] = $this->rowToShare($fetched);
         }
 
@@ -129,6 +165,20 @@ final class SQLiteShareRepository extends AbstractSQLiteRepository implements Sh
         ]);
     }
 
+    /**
+     * Converts a database row into a {@see Share} object.
+     * 
+     * @param array{
+     *          'id': string,
+     *          'userId': int,
+     *          'username': string,
+     *          'filepath': string,
+     *          'createdAt': int,
+     *          'expiresAt': ?int,
+     *          'revokedAt': ?int,
+     * } $fetched The fetched row
+     * @return Share The share from the row
+     */
     private function rowToShare(array $fetched): Share
     {
         return new Share(

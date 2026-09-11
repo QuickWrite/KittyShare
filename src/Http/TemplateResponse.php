@@ -12,10 +12,10 @@ final class TemplateResponse implements Response
     private static string $template_dir = __DIR__ . '/../Template/';
 
     /**
-     * @param string $template  The name of the template to render.
-     * @param array $parameters Variables to make available to the template.
-     * @param int $statusCode   The HTTP status code to send.
-     * @param array $headers    Additional HTTP response headers.
+     * @param string               $template   The name of the template to render.
+     * @param array<string, mixed> $parameters Variables to make available to the template.
+     * @param int                  $statusCode The HTTP status code to send.
+     * @param array<string>        $headers    Additional HTTP response headers.
      */
     public function __construct(
         private string $template,

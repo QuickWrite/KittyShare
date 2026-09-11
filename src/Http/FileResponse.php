@@ -8,10 +8,10 @@ namespace KittyShare\Http;
 final class FileResponse implements Response
 {
     /**
-     * @param string $file        The path to the file to send.
-     * @param string $contentType The MIME type of the file.
-     * @param int    $statusCode  The HTTP status code to send.
-     * @param int    $chunkSize   The number of bytes sent per chunk.
+     * @param string       $file        The path to the file to send.
+     * @param string       $contentType The MIME type of the file.
+     * @param positive-int $statusCode  The HTTP status code to send.
+     * @param positive-int $chunkSize   The number of bytes sent per chunk.
      */
     public function __construct(
         private string $file,
