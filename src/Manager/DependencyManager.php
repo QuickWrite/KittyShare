@@ -1,8 +1,8 @@
 <?php
 
-namespace KittyShare;
+namespace KittyShare\Manager;
 
-use KittyShare\Manager\AuthenticationManager;
+use KittyShare\Model\Dependencies;
 use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase, SQLiteSessionRepository, SQLiteSetupRepository, SQLiteShareRepository};
 
 class DependencyManager

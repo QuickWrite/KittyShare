@@ -1,6 +1,6 @@
 <?php
 
-namespace KittyShare;
+namespace KittyShare\Model;
 
 use KittyShare\Manager\AuthenticationManager;
 use KittyShare\Repository\{SessionRepository, UserRepository, SetupRepository, ShareRepository};

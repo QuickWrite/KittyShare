@@ -2,7 +2,7 @@
 
 namespace KittyShare\Http;
 
-use KittyShare\Dependencies;
+use KittyShare\Model\Dependencies;
 
 /**
  * The router is responsible for dispatching requests to the correct handler

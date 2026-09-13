@@ -3,7 +3,7 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Http\{Request, Response, TemplateResponse, FileResponse};
-use KittyShare\ConfigManager;
+use KittyShare\Manager\ConfigManager;
 use KittyShare\Filesystem\DirectoryBrowser;
 use KittyShare\Model\Share;
 use Override;

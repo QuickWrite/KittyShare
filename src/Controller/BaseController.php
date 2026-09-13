@@ -2,7 +2,7 @@
 
 namespace KittyShare\Controller;
 
-use KittyShare\Dependencies;
+use KittyShare\Model\Dependencies;
 use KittyShare\Http\Request;
 use KittyShare\Http\Response;
 

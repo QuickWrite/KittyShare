@@ -1,6 +1,6 @@
 <?php
 
-namespace KittyShare;
+namespace KittyShare\Model;
 
 
 final readonly class Config

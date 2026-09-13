@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use KittyShare\Controller\{AdminController, LoginController, LogoutController, SetupController, ShareController};
-use KittyShare\DependencyManager;
+use KittyShare\Manager\DependencyManager;
 use KittyShare\Http\{Router, Method};
 
 $dependencies = DependencyManager::get();

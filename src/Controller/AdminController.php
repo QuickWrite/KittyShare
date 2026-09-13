@@ -3,7 +3,7 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Filesystem\DirectoryBrowser;
-use KittyShare\ConfigManager;
+use KittyShare\Manager\ConfigManager;
 use KittyShare\Http\{Method, Request, Response};
 use KittyShare\Http\{TemplateResponse, RedirectResponse};
 use KittyShare\Model\Share;

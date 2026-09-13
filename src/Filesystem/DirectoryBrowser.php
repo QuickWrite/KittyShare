@@ -2,7 +2,7 @@
 
 namespace KittyShare\Filesystem;
 
-use KittyShare\ConfigManager;
+use KittyShare\Manager\ConfigManager;
 
 use function is_dir;
 use function ltrim;

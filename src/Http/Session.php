@@ -2,7 +2,7 @@
 
 namespace KittyShare\Http;
 
-use KittyShare\ConfigManager;
+use KittyShare\Manager\ConfigManager;
 use RuntimeException;
 
 /**

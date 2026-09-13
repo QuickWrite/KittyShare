@@ -1,6 +1,8 @@
 <?php
 
-namespace KittyShare;
+namespace KittyShare\Manager;
+
+use KittyShare\Model\Config;
 
 final class ConfigManager {
     private static ?Config $config = null;
