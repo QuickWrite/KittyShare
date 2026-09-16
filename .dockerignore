@@ -27,6 +27,7 @@
 **/vendor
 **/tests
 **/*.sqlite*
+**/screenshots
 phpstan.neon
 LICENSE
 README.md
