@@ -45,9 +45,9 @@ if (!function_exists('encodePath')) {
 
             <li class="directory-list--item">
                 <?php if ($isDir): ?>
-                    <img src="/icon/folder.svg" alt="Folder">
+                    <img src="/assets/icon/folder.svg" alt="Folder">
                 <?php else: ?>
-                    <img src="/icon/file.svg" alt="File">
+                    <img src="/assets/icon/file.svg" alt="File">
                 <?php endif; ?>
 
                 <?php if ($isSelectableFile): ?>

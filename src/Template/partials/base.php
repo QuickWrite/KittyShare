@@ -23,7 +23,7 @@ function renderHeader(string $title): void {
 <body>
     <header class="header">
         <div class="header--icon">
-            <img src="/icon/kittyshare-logo-light.svg" alt="" /> <span>KittyShare</span>
+            <img src="/assets/logo/kittyshare-logo-light.svg" alt="" /> <span>KittyShare</span>
         </div>
     </header>
 <?php
