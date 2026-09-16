@@ -27,35 +27,49 @@ if (!function_exists('encodePath')) {
 }
 ?>
 <?php if ($entries !== []): ?>
-    <ul>
+    <ul class="directory-list">
         <?php foreach ($entries as $entry): ?>
-            <li>
-                <?php if ($selectBaseUrl !== null && !$entry['isDir']): ?>
-                    <?= e($entry['name']) ?>
-                    (<a href="<?= e(
-                        $selectBaseUrl . '?path=' . rawurlencode($entry['relativePath'])
-                    ) ?>">Select</a>)
+            <?php
+            $name = e($entry['name']);
+            $path = $entry['relativePath'];
+
+            $entryUrl = $baseUrl . '/' . encodePath($path);
+            $selectUrl = $selectBaseUrl !== null
+                ? $selectBaseUrl . '?path=' . rawurlencode($path)
+                : null;
+
+            $isDir = $entry['isDir'];
+
+            $isSelectableFile = $selectUrl !== null && !$isDir;
+            ?>
+
+            <li class="directory-list--item">
+                <?php if ($isDir): ?>
+                    <img src="/icon/folder.svg" alt="Folder">
                 <?php else: ?>
-                    <a href="<?= e(
-                        $baseUrl . '/' . encodePath($entry['relativePath'])
-                    ) ?>">
-                        <?= e($entry['name']) ?><?= $entry['isDir'] ? '/' : '' ?>
+                    <img src="/icon/file.svg" alt="File">
+                <?php endif; ?>
+
+                <?php if ($isSelectableFile): ?>
+                    <?= $name ?>
+                <?php else: ?>
+                    <a href="<?= e($entryUrl) ?>">
+                        <?= $name ?><?=  $isDir ? '/' : '' ?>
                     </a>
-                    <?php if ($selectBaseUrl !== null): ?>
-                        (<a href="<?= e(
-                            $selectBaseUrl . '?path=' . rawurlencode($entry['relativePath'])
-                        ) ?>">Select</a>)
-                    <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($selectUrl !== null): ?>
+                    (<a href="<?= e($selectUrl) ?>">Select</a>)
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
     </ul>
 <?php else: ?>
-    <p>This directory is empty.</p>
+    <p class="margin-top-6">This directory is empty.</p>
 <?php endif; ?>
 
 <?php if ($backUrl !== null): ?>
-    <p>
+    <p class="margin-top-6">
         <a href="<?= e($backUrl) ?>">Back to root</a>
     </p>
 <?php endif; ?>
