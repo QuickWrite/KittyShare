@@ -3,7 +3,7 @@
 /** @var list<\KittyShare\Model\Share> $shares */
 ?>
 <?php
-require_once __DIR__ . '/partials/base.php';
+require_once __DIR__ . '/../partials/base.php';
 
 renderHeader("Admin");
 ?>

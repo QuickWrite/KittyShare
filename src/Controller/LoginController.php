@@ -36,7 +36,7 @@ final class LoginController extends BaseController
         $values = Session::pull(self::$valuesKey, []);
 
         return new TemplateResponse(
-            'Login',
+            'auth/login',
             parameters: [
                 'errors' => $errors,
                 'values' => $values,

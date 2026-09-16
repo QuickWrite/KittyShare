@@ -2,7 +2,7 @@
 /** @var string $path */
 ?>
 <?php
-require_once __DIR__ . '/partials/base.php';
+require_once __DIR__ . '/../partials/base.php';
 
 renderHeader("404 Page not found");
 ?>

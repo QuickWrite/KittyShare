@@ -33,7 +33,7 @@ class SetupController extends BaseController
         $values = Session::pull(self::$valuesKey, []);
 
         return new TemplateResponse(
-            'Setup',
+            'setup/form',
             parameters: [
                     'errors' => $errors,
                     'values' => $values,

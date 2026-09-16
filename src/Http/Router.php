@@ -90,7 +90,7 @@ final class Router
         }
 
         return new TemplateResponse(
-            template: "404",
+            template: "error/404",
             parameters: [
                 'path' => $path,
             ],
