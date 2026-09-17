@@ -18,7 +18,7 @@ $shareUrl = '/share/' . rawurlencode((string) $share->id);
 renderHeader("Shared directory " . $base);
 ?>
 <main>
-    <h1>Share of <?= e($base) ?></h1>
+    <h1 class="title">Share of <?= e($base) ?></h1>
 
     <?php
     $baseUrl = $shareUrl;
