@@ -239,6 +239,68 @@ main {
     }
 }
 
+.form {
+    width: min(100%, 600px);
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+
+    padding: var(--space-6);
+
+    border: 0.2rem solid var(--color-border);
+    border-radius: var(--radius-md);
+
+    & .title {
+        margin-bottom: 0rem;
+    }
+}
+
+.form .form--item {
+    display: flex;
+    flex-direction: column;
+
+    & label {
+        font-weight: var(--fw-semibold);
+    }
+}
+
 .margin-top-6 {
     margin-top: var(--space-6);
+}
+
+.content-center {
+    display: flex;
+
+    align-items: center;
+    vertical-align: middle;
+}
+
+.button {
+    background-color: var(--color-primary);
+    padding: var(--space-3);
+    color: var(--color-text-inverse);
+    text-align: center;
+    font-weight: var(--fw-bold);
+
+    border: none;
+    border-radius: var(--radius-md);
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: var(--color-primary-hover);
+    }
+}
+
+.text-input {
+    padding: var(--space-3);
+    color: var(--color-text);
+    border: 0.2rem solid var(--color-border);
+    border-radius: var(--radius-md);
+}
+
+.error {
+    color: var(--color-danger);
 }

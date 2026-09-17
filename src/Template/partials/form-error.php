@@ -12,7 +12,7 @@ function print_error(string $field, ?string $error): string
 
     $message = match ($error) {
         'empty' => "$field cannot be empty.",
-        'invalid' => 'The username or password is incorrect.',
+        'invalid' => "The $field is invalid. Please try again.",
     };
 
     return "<span class=\"error\">$message</span>";

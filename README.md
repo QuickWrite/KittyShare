@@ -21,6 +21,8 @@ To see how the application looks like, it is often useful to see some screenshot
 |     Page     |                                                          Light Mode                                                           |   Dark Mode   |
 | :----------: | :---------------------------------------------------------------------------------------------------------------------------: | :-----------: |
 | Share screen | <img src="./screenshots/screenshot-share-light.png" alt="Share screen with some files and folders in light mode" width="300"> | _Coming soon_ |
+| Setup screen | <img src="./screenshots/screenshot-setup-light.png" alt="Setup screen with username and password in light mode" width="300">  | _Coming soon_ |
+| Login screen | <img src="./screenshots/screenshot-login-light.png" alt="Login screen with username and password in light mode" width="300">  | _Coming soon_ |
 
 ## Project Structure
 

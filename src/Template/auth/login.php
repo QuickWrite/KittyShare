@@ -17,35 +17,42 @@ require_once __DIR__ . '/../partials/form-error.php';
 
 renderHeader("Login");
 ?>
-<main>
-    <h1>Login</h1>
+<main class="content-center">
+    <form method="post" class="form">
+        <h1 class="title">Login</h1>
 
-    <form method="post">
-        <label for="username">Username</label>
-        <input
-            type="text"
-            id="username"
-            name="username"
-            placeholder="John Doe"
-            value="<?= e($values['username'] ?? '') ?>"
-            autocomplete="username"
-            required />
-        <?= print_error('Username', $errors['username'] ?? null) ?>
+        <div class="form--item">
+            <label for="username">Username:</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                class="text-input"
+                placeholder="John Doe"
+                value="<?= e($values['username'] ?? '') ?>"
+                autocomplete="username"
+                required />
+            <?= print_error('Username', $errors['username'] ?? null) ?>
+        </div>
 
-        <label for="password">Password</label>
-        <input
-            type="password"
-            id="password"
-            name="password"
-            autocomplete="current-password"
-            required />
-        <?= print_error('Password', $errors['password'] ?? null) ?>
+        <div class="form--item">
+            <label for="password">Password:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                class="text-input"
+                autocomplete="current-password"
+                required />
+            <?= print_error('Password', $errors['password'] ?? null) ?>
+        </div>
 
         <?php if (isset($errors['credentials'])): ?>
-            <?= print_error('', $errors['credentials']) ?>
+            <?= print_error('username or password', $errors['credentials']) ?>
         <?php endif; ?>
 
-        <button type="submit">Login</button>
+        <button type="submit" class="button">Login</button>
     </form>
 </main>
 <?php

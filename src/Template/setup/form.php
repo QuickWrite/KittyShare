@@ -12,18 +12,38 @@ require_once __DIR__ . '/../partials/form-error.php';
 
 renderHeader("Setup Application");
 ?>
-<main>
-    <h1>Setup Application</h1>
-    <form method="post">
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" placeholder="John Doe" value="<?= e($values['username'] ?? '') ?>" required />
-        <?= print_error('Username', $errors['username'] ?? null) ?>
+<main class="content-center">
+    <form method="post" class="form">
+        <h1 class="title">Setup Application</h1>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-        <?= print_error('Password', $errors['password'] ?? null) ?>
+        <div class="form--item">
+            <label for="username">Username:</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                class="text-input"
+                placeholder="John Doe"
+                value="<?= e($values['username'] ?? '') ?>"
+                required
+            />
+            <?= print_error('Username', $errors['username'] ?? null) ?>
+        </div>
 
-        <button type="submit">Submit</button>
+        <div class="form--item">
+            <label for="password">Password:</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Password"
+                class="text-input"
+                required
+            />
+            <?= print_error('Password', $errors['password'] ?? null) ?>
+        </div>
+
+        <button type="submit" class="button">Create Account</button>
     </form>
 </main>
 <?php
