@@ -24,6 +24,7 @@ To see how the application looks like, it is often useful to see some screenshot
 |    Setup screen     | <img src="./screenshots/screenshot-setup-light.png" alt="Setup screen with username and password in light mode" width="300">  | _Coming soon_ |
 |    Login screen     | <img src="./screenshots/screenshot-login-light.png" alt="Login screen with username and password in light mode" width="300">  | _Coming soon_ |
 |    Admin screen     |            <img src="./screenshots/screenshot-admin-light.png" alt="Admin screen with list of shares" width="300">            | _Coming soon_ |
+|    Browse screen    |        <img src="./screenshots/screenshot-browse-light.png" alt="Browse folders to create a share screen" width="300">        | _Coming soon_ |
 | Create share screen |               <img src="./screenshots/screenshot-create-share-light.png" alt="Create share screen" width="300">               | _Coming soon_ |
 | Manage share screen |               <img src="./screenshots/screenshot-manage-share-light.png" alt="Create share screen" width="300">               | _Coming soon_ |
 
