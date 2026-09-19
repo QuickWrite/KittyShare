@@ -1,6 +1,9 @@
 <?php
-/** @var \KittyShare\Model\User $user */
-/** @var list<\KittyShare\Model\Share> $shares */
+/**
+ * @var \KittyShare\Model\User $user
+ * @var list<\KittyShare\Model\Share> $shares
+ * @var string|null $baseUrl
+ */
 ?>
 <?php
 require_once __DIR__ . '/../partials/base.php';
