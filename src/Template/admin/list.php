@@ -8,31 +8,50 @@ require_once __DIR__ . '/../partials/base.php';
 renderHeader("Admin");
 ?>
 <main>
-    <h1>Admin</h1>
+    <div class="left-right">
+        <div>
+            <h1 class="title">Admin</h1>
 
-    <p>
-        Welcome, <?= e($user->username) ?>!
-    </p>
+            <p>
+                Welcome, <?= e($user->username) ?>!
+            </p>
+        </div>
 
-    <p>
-        <a href="/admin/browse">Create new share</a>
-    </p>
+        <p>
+            <a href="/admin/browse" class="button">Create new share</a>
+        </p>
+    </div>
 
-    <h2>Your shares</h2>
+    <h2 class="subtitle">Your shares</h2>
 
     <?php if ($shares !== []): ?>
-        <ul>
+        <ul class="directory-list">
             <?php foreach ($shares as $share): ?>
-                <li>
+                <li class="directory-list--item">
+                    <?php
+                        $shareLink = '/share/' . rawurlencode($share->id);
+
+                        if (($baseUrl ?? null) !== null && $baseUrl !== '') {
+                            $shareLink = $baseUrl . $shareLink;
+                        }
+                    ?>
+
+                    <?php if (!($share->isRevoked() || $share->isExpired())): ?>
+                        <!-- TODO: Add base to icon link -->
+                        <a href="<?= $shareLink ?>"><img src="/assets/icon/new-tab.svg" alt="Share link to resource" class="text-icon"></a>
+                    <?php else: ?>
+                        <span><img src="/assets/icon/new-tab.svg" alt="Share link to resource" class="text-icon invalid"></span>
+                    <?php endif; ?>
+
                     <a href="/admin/shares/<?= e($share->id) ?>">
                         <?= e(basename($share->filepath) !== '' ? basename($share->filepath) : $share->filepath) ?>
                     </a>
                     <?php if ($share->isRevoked()): ?>
-                        (revoked)
+                        <span class="pill pill--revoked right">revoked</span>
                     <?php elseif ($share->isExpired()): ?>
-                        (expired)
+                        <span class="pill pill--expired right">expired</pill>
                     <?php else: ?>
-                        (active)
+                        <span class="pill pill--active right">active</span>
                     <?php endif; ?>
                 </li>
             <?php endforeach; ?>
@@ -41,8 +60,8 @@ renderHeader("Admin");
         <p>No shares yet.</p>
     <?php endif; ?>
 
-    <form method="post" action="/logout">
-        <button type="submit">Log out</button>
+    <form method="post" action="/logout" class="margin-top-6">
+        <button type="submit" class="button bg-danger-hover">Log out</button>
     </form>
 </main>
 <?php

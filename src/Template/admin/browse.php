@@ -16,11 +16,11 @@ require_once __DIR__ . '/../partials/base.php';
 renderHeader("Select path for new share");
 ?>
 <main>
-    <h1>Select path for new share</h1>
+    <h1 class="title">Select path for new share</h1>
 
     <p>Browsing: <?= e($directoryPath) ?></p>
 
-    <p>
+    <p class="margin-top-3 margin-bottom-3">
         <a href="<?= e(
             '/admin/shares/new?path=' . rawurlencode($relativePath === '' ? '/' : $relativePath)
         ) ?>">Select this folder</a>
@@ -33,7 +33,7 @@ renderHeader("Select path for new share");
     require __DIR__ . '/../partials/directory-list.php';
     ?>
 
-    <p>
+    <p class="margin-top-3">
         <a href="/admin">Back to admin</a>
     </p>
 </main>

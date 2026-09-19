@@ -19,22 +19,22 @@ if ($parent !== '' && $parent !== '.') {
 renderHeader("Create share");
 ?>
 <main>
-    <h1>Create share</h1>
+    <h1 class="title">Create share</h1>
 
-    <p>Selected path: <?= e($filepath) ?></p>
+    <p>Selected path: <code class="path"><?= e($filepath) ?></code></p>
 
-    <p>Do you want to create a share for this path?</p>
+    <p class="margin-top-3">Do you want to create a share for this path?</p>
 
-    <form method="post" action="/admin/shares">
+    <form method="post" action="/admin/shares" class="margin-top-3 margin-bottom-3">
         <input type="hidden" name="filepath" value="<?= e($filepath) ?>" />
-        <button type="submit">Create share</button>
+        <button type="submit" class="button">Create share</button>
     </form>
 
-    <p>
+    <p class="margin-top-3">
         <a href="<?= e($browseUrl) ?>">Cancel (back to file tree)</a>
     </p>
 
-    <p>
+    <p class="margin-top-3">
         <a href="/admin">Back to admin</a>
     </p>
 </main>

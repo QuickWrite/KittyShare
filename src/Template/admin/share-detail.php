@@ -16,39 +16,41 @@ if (($baseUrl ?? null) !== null && $baseUrl !== '') {
 renderHeader("Manage share");
 ?>
 <main>
-    <h1>Manage share</h1>
+    <div class="left-right">
+        <h1 class="title">Manage share</h1>
 
-    <p>
-        Link: <a href="<?= e($shareLink) ?>"><?= e($shareLink) ?></a>
+        <form method="post" action="/admin/shares/<?= e($share->id) ?>/delete" class="margin-top-3">
+            <button type="submit" class="button bg-danger-hover">Delete</button>
+        </form>
+    </div>
+
+    <p class="margin-top-3">
+        <span class="infopoint">Link:</span> <a href="<?= e($shareLink) ?>"><?= e($shareLink) ?></a>
     </p>
 
-    <p>Path: <?= e($share->filepath) ?></p>
+    <p><span class="infopoint">Path:</span> <code class="path"><?= e($share->filepath) ?></code></p>
 
-    <p>Status:
+    <p><span class="infopoint">Status:</span>
         <?php if ($share->isRevoked()): ?>
-            revoked
+            <span class="pill pill--revoked right">revoked</span>
         <?php elseif ($share->isExpired()): ?>
-            expired
+            <span class="pill pill--expired right">expired</pill>
         <?php else: ?>
-            active
+            <span class="pill pill--active right">active</span>
         <?php endif; ?>
     </p>
 
     <?php if ($share->isRevoked()): ?>
-        <form method="post" action="/admin/shares/<?= e($share->id) ?>/unrevoke">
-            <button type="submit">Unrevoke</button>
+        <form method="post" action="/admin/shares/<?= e($share->id) ?>/unrevoke" class="margin-top-6">
+            <button type="submit" class="button bg-warning-hover">Unrevoke</button>
         </form>
     <?php else: ?>
-        <form method="post" action="/admin/shares/<?= e($share->id) ?>/revoke">
-            <button type="submit">Revoke</button>
+        <form method="post" action="/admin/shares/<?= e($share->id) ?>/revoke" class="margin-top-6">
+            <button type="submit" class="button bg-warning-hover">Revoke</button>
         </form>
     <?php endif; ?>
 
-    <form method="post" action="/admin/shares/<?= e($share->id) ?>/delete">
-        <button type="submit">Delete</button>
-    </form>
-
-    <p>
+    <p class="margin-top-3">
         <a href="/admin">Back to admin</a>
     </p>
 </main>
