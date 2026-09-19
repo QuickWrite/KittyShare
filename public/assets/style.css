@@ -95,6 +95,30 @@ table {
     --radius-pill: 999px;
 }
 
+@media (prefers-color-scheme: dark) {
+    :root {
+        /* Colors */
+        --color-background: #202124;
+        --color-text: #e6e1dc;
+        --color-text-inverse: #202124;
+
+        --color-border: #3a3b3e;
+
+        --color-primary: #8da9c4;
+        --color-primary-hover: #a9bfd3;
+
+        --color-success: #91b89a;
+        --color-success-subtle: #29382f;
+
+        --color-warning: #ddb496;
+        --color-warning-hover: #e9c1a7;
+        --color-warning-subtle: #403725;
+
+        --color-danger: #c99494;
+        --color-danger-hover: #d9adad;
+        --color-danger-subtle: #402d2d;
+    }
+}
 
 /* ==========================================================================
    Base
@@ -303,6 +327,8 @@ main {
 
     color: var(--color-text);
 
+    background-color: var(--color-background);
+
     border: 0.2rem solid var(--color-border);
     border-radius: var(--radius-md);
 }
@@ -404,6 +430,26 @@ main {
         var(--color-danger) 25%,
         transparent
     );
+}
+
+/* ==========================================================================
+   Icon
+   ========================================================================== */
+
+.icon {
+    filter: brightness(0) saturate(100%);
+}
+
+@media (prefers-color-scheme: dark) {
+    .icon {
+        filter: brightness(0) saturate(100%)
+            invert(91%)
+            sepia(8%)
+            saturate(250%)
+            hue-rotate(330deg)
+            brightness(96%)
+            contrast(91%);
+    }
 }
 
 

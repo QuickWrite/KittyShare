@@ -18,15 +18,15 @@ intended to be distributed for other people.
 ## Screenshots
 
 To see how the application looks like, it is often useful to see some screenshots:
-|        Page         |                                                          Light Mode                                                           |   Dark Mode   |
-| :-----------------: | :---------------------------------------------------------------------------------------------------------------------------: | :-----------: |
-|    Share screen     | <img src="./screenshots/screenshot-share-light.png" alt="Share screen with some files and folders in light mode" width="300"> | _Coming soon_ |
-|    Setup screen     | <img src="./screenshots/screenshot-setup-light.png" alt="Setup screen with username and password in light mode" width="300">  | _Coming soon_ |
-|    Login screen     | <img src="./screenshots/screenshot-login-light.png" alt="Login screen with username and password in light mode" width="300">  | _Coming soon_ |
-|    Admin screen     |            <img src="./screenshots/screenshot-admin-light.png" alt="Admin screen with list of shares" width="300">            | _Coming soon_ |
-|    Browse screen    |        <img src="./screenshots/screenshot-browse-light.png" alt="Browse folders to create a share screen" width="300">        | _Coming soon_ |
-| Create share screen |               <img src="./screenshots/screenshot-create-share-light.png" alt="Create share screen" width="300">               | _Coming soon_ |
-| Manage share screen |               <img src="./screenshots/screenshot-manage-share-light.png" alt="Create share screen" width="300">               | _Coming soon_ |
+|        Page         |                                                          Light Mode                                                           |                                                          Dark Mode                                                          |
+| :-----------------: | :---------------------------------------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------------------------------------: |
+|    Share screen     | <img src="./screenshots/screenshot-share-light.png" alt="Share screen with some files and folders in light mode" width="300"> | <img src="./screenshots/screenshot-share-dark.png" alt="Share screen with some files and folders in dark mode" width="300"> |
+|    Setup screen     | <img src="./screenshots/screenshot-setup-light.png" alt="Setup screen with username and password in light mode" width="300">  | <img src="./screenshots/screenshot-setup-dark.png" alt="Setup screen with username and password in dark mode" width="300">  |
+|    Login screen     | <img src="./screenshots/screenshot-login-light.png" alt="Login screen with username and password in light mode" width="300">  | <img src="./screenshots/screenshot-login-dark.png" alt="Login screen with username and password in dark mode" width="300">  |
+|    Admin screen     |     <img src="./screenshots/screenshot-admin-light.png" alt="Admin screen with list of shares in light mode" width="300">     |     <img src="./screenshots/screenshot-admin-dark.png" alt="Admin screen with list of shares in dark mode" width="300">      |
+|    Browse screen    | <img src="./screenshots/screenshot-browse-light.png" alt="Browse folders to create a share screen in light mode" width="300"> | <img src="./screenshots/screenshot-browse-dark.png" alt="Browse folders to create a share screen in dark mode" width="300"> |
+| Create share screen |        <img src="./screenshots/screenshot-create-share-light.png" alt="Create share screen in light mode" width="300">        |        <img src="./screenshots/screenshot-create-share-dark.png" alt="Create share screen in dark mode" width="300">        |
+| Manage share screen |        <img src="./screenshots/screenshot-manage-share-light.png" alt="Manage share screen in light mode" width="300">        |        <img src="./screenshots/screenshot-manage-share-dark.png" alt="Manage share screen in dark mode" width="300">        |
 
 ## Project Structure
 
