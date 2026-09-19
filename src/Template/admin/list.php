@@ -32,30 +32,34 @@ renderHeader("Admin");
             <?php foreach ($shares as $share): ?>
                 <li class="directory-list--item">
                     <?php
+                        $isActive = !($share->isRevoked() || $share->isExpired());
+                    ?>
+
+                    <?php if ($share->isRevoked()): ?>
+                        <span class="pill pill--revoked">revoked</span>
+                    <?php elseif ($share->isExpired()): ?>
+                        <span class="pill pill--expired">expired</pill>
+                    <?php else: ?>
+                        <span class="pill pill--active">active</span>
+                    <?php endif; ?>
+
+                    <?php if ($isActive): ?>
+                    <?php
                         $shareLink = '/share/' . rawurlencode($share->id);
 
                         if (($baseUrl ?? null) !== null && $baseUrl !== '') {
                             $shareLink = $baseUrl . $shareLink;
                         }
                     ?>
-
-                    <?php if (!($share->isRevoked() || $share->isExpired())): ?>
-                        <!-- TODO: Add base to icon link -->
-                        <a href="<?= $shareLink ?>"><img src="/assets/icon/new-tab.svg" alt="Share link to resource" class="text-icon"></a>
-                    <?php else: ?>
-                        <span><img src="/assets/icon/new-tab.svg" alt="Share link to resource" class="text-icon invalid"></span>
+                    <a href="<?= $shareLink ?>">
                     <?php endif; ?>
-
-                    <a href="/admin/shares/<?= e($share->id) ?>">
                         <?= e(basename($share->filepath) !== '' ? basename($share->filepath) : $share->filepath) ?>
+                    <?php if ($isActive): ?>
                     </a>
-                    <?php if ($share->isRevoked()): ?>
-                        <span class="pill pill--revoked right">revoked</span>
-                    <?php elseif ($share->isExpired()): ?>
-                        <span class="pill pill--expired right">expired</pill>
-                    <?php else: ?>
-                        <span class="pill pill--active right">active</span>
                     <?php endif; ?>
+
+                    <!-- TODO: Correct link with baseUrl -->
+                    <span class="right"><a href="/admin/shares/<?= e($share->id) ?>">Edit</a></span>
                 </li>
             <?php endforeach; ?>
         </ul>

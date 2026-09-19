@@ -59,7 +59,7 @@ if (!function_exists('encodePath')) {
                 <?php endif; ?>
 
                 <?php if ($selectUrl !== null): ?>
-                    (<a href="<?= e($selectUrl) ?>">Select</a>)
+                    <span class="right"><a href="<?= e($selectUrl) ?>">Select</a></span>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
