@@ -3,7 +3,6 @@
 namespace KittyShare\Controller;
 
 use KittyShare\Http\{Request, Response};
-use KittyShare\Http\RedirectResponse;
 use Override;
 
 final class LogoutController extends BaseController
@@ -13,6 +12,6 @@ final class LogoutController extends BaseController
     {
         $this->dependencies->authenticationManager->logout();
 
-        return new RedirectResponse('/login');
+        return $this->redirect('/login');
     }
 }

@@ -10,6 +10,8 @@ $values ??= [];
 require_once __DIR__ . '/../partials/base.php';
 require_once __DIR__ . '/../partials/form-error.php';
 
+$GLOBALS['__kittyshare_base'] = $baseUrl ?? '';
+
 renderHeader("Setup Application");
 ?>
 <main class="content-center">

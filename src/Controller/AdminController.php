@@ -5,7 +5,7 @@ namespace KittyShare\Controller;
 use KittyShare\Filesystem\DirectoryBrowser;
 use KittyShare\Manager\ConfigManager;
 use KittyShare\Http\{Method, Request, Response};
-use KittyShare\Http\{TemplateResponse, RedirectResponse};
+use KittyShare\Http\TemplateResponse;
 use KittyShare\Model\Share;
 use Override;
 
@@ -24,7 +24,7 @@ final class AdminController extends BaseController
         $session = $this->dependencies->authenticationManager->currentSession();
 
         if ($session === null) {
-            return new RedirectResponse('/login');
+            return $this->redirect('/login');
         }
 
         $method = $request->getMethod();
@@ -62,7 +62,7 @@ final class AdminController extends BaseController
             return $this->delete($request);
         }
 
-        return new TemplateResponse('error/404', ['path' => $uri], 404);
+        return new TemplateResponse('error/404', ['path' => $uri, 'baseUrl' => ConfigManager::get()->baseUrl], 404);
     }
 
     private function list(Request $request): Response
@@ -70,7 +70,7 @@ final class AdminController extends BaseController
         $session = $this->dependencies->authenticationManager->currentSession();
 
         if ($session === null) {
-            return new RedirectResponse('/login');
+            return $this->redirect('/login');
         }
 
         return new TemplateResponse(
@@ -78,6 +78,7 @@ final class AdminController extends BaseController
             parameters: [
                 'user' => $session->user,
                 'shares' => $this->dependencies->shareRepository->findByUser($session->user),
+                'baseUrl' => ConfigManager::get()->baseUrl,
             ],
         );
     }
@@ -110,10 +111,13 @@ final class AdminController extends BaseController
         $share = $this->ownedShare($request);
 
         if ($share === null) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
-        return new TemplateResponse('admin/share-detail', ['share' => $share, 'baseUrl' => ConfigManager::get()->baseUrl]);
+        return new TemplateResponse('admin/share-detail', [
+            'share' => $share,
+            'baseUrl' => ConfigManager::get()->baseUrl,
+        ]);
     }
 
     private function revoke(Request $request): Response
@@ -121,14 +125,14 @@ final class AdminController extends BaseController
         $share = $this->ownedShare($request);
 
         if ($share === null) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         if (!$share->isRevoked()) {
             $this->dependencies->shareRepository->save($share->revoke());
         }
 
-        return new RedirectResponse('/admin/shares/' . rawurlencode($share->id));
+        return $this->redirect('/admin/shares/' . rawurlencode($share->id));
     }
 
     private function unrevoke(Request $request): Response
@@ -136,14 +140,14 @@ final class AdminController extends BaseController
         $share = $this->ownedShare($request);
 
         if ($share === null) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         if ($share->isRevoked()) {
             $this->dependencies->shareRepository->save($share->unrevoke());
         }
 
-        return new RedirectResponse('/admin/shares/' . rawurlencode($share->id));
+        return $this->redirect('/admin/shares/' . rawurlencode($share->id));
     }
 
     private function delete(Request $request): Response
@@ -151,12 +155,12 @@ final class AdminController extends BaseController
         $share = $this->ownedShare($request);
 
         if ($share === null) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         $this->dependencies->shareRepository->delete($share);
 
-        return new RedirectResponse('/admin');
+        return $this->redirect('/admin');
     }
 
     private function browse(Request $request): Response
@@ -171,7 +175,7 @@ final class AdminController extends BaseController
             $resolved = DirectoryBrowser::resolvePath($root, $path);
 
             if ($resolved === null || !is_dir($resolved)) {
-                return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+                return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
             }
 
             $directoryPath = $resolved;
@@ -185,6 +189,7 @@ final class AdminController extends BaseController
                 'directoryPath' => $directoryPath,
                 'relativePath' => $relativePath,
                 'entries' => DirectoryBrowser::listDirectory($directoryPath, $relativePath, ConfigManager::get()->showDotfiles),
+                'baseUrl' => ConfigManager::get()->baseUrl,
             ]
         );
     }
@@ -195,13 +200,13 @@ final class AdminController extends BaseController
         $path = $request->get('path');
 
         if (!is_string($path) || $path === '') {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         $resolved = DirectoryBrowser::resolvePath($root, $path);
 
         if ($resolved === null || (!is_file($resolved) && !is_dir($resolved))) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         return new TemplateResponse(
@@ -209,6 +214,7 @@ final class AdminController extends BaseController
             [
                 'relativePath' => DirectoryBrowser::relativePath($root, $resolved),
                 'filepath' => $resolved,
+                'baseUrl' => ConfigManager::get()->baseUrl,
             ]
         );
     }
@@ -218,13 +224,13 @@ final class AdminController extends BaseController
         $session = $this->dependencies->authenticationManager->currentSession();
 
         if ($session === null) {
-            return new RedirectResponse('/login');
+            return $this->redirect('/login');
         }
 
         $filepath = $request->post('filepath');
 
         if (!is_string($filepath) || $filepath === '') {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         $root = DirectoryBrowser::browseRoot();
@@ -235,11 +241,11 @@ final class AdminController extends BaseController
             || !DirectoryBrowser::isWithinRoot($root, $resolved)
             || (!is_file($resolved) && !is_dir($resolved))
         ) {
-            return new TemplateResponse('error/404', ['path' => $request->getUri()], 404);
+            return new TemplateResponse('error/404', ['path' => $request->getUri(), 'baseUrl' => ConfigManager::get()->baseUrl], 404);
         }
 
         $share = $this->dependencies->shareRepository->create($session->user, $resolved);
 
-        return new RedirectResponse('/admin/shares/' . rawurlencode($share->id));
+        return $this->redirect('/admin/shares/' . rawurlencode($share->id));
     }
 }

@@ -2,8 +2,9 @@
 
 namespace KittyShare\Controller;
 
-use KittyShare\Http\{Method, RedirectResponse, Request, Response, TemplateResponse};
+use KittyShare\Http\{Method, Request, Response, TemplateResponse};
 use KittyShare\Http\Session;
+use KittyShare\Manager\ConfigManager;
 use Override;
 
 use function count;
@@ -17,13 +18,13 @@ class SetupController extends BaseController
     public function handle(Request $request): Response
     {
         if (!$this->dependencies->setupRepository->setupRequired()) {
-            return new RedirectResponse('/login');
+            return $this->redirect('/login');
         }
 
         return match ($request->getMethod()) {
             Method::Get => $this->handleGet($request),
             Method::Post => $this->handlePost($request),
-            default => new RedirectResponse('/login'),
+            default => $this->redirect('/login'),
         };
     }
 
@@ -37,6 +38,7 @@ class SetupController extends BaseController
             parameters: [
                     'errors' => $errors,
                     'values' => $values,
+                    'baseUrl' => ConfigManager::get()->baseUrl,
                 ],
         );
     }
@@ -60,12 +62,12 @@ class SetupController extends BaseController
             Session::set(self::$valuesKey, [ 'username' => $username ]);
             Session::set(self::$errorsKey, $errors);
 
-            return new RedirectResponse('/setup');
+            return $this->redirect('/setup');
         }
 
         // Create admin user
         $this->dependencies->userRepository->createUser($username, $password);
 
-        return new RedirectResponse('/login');
+        return $this->redirect('/login');
     }
 }

@@ -4,6 +4,8 @@
 <?php
 require_once __DIR__ . '/../partials/base.php';
 
+$GLOBALS['__kittyshare_base'] = $baseUrl ?? '';
+
 renderHeader("404 Page not found");
 ?>
 <main>

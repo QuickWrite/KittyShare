@@ -3,6 +3,7 @@
 namespace KittyShare\Http;
 
 use KittyShare\Model\Dependencies;
+use KittyShare\Manager\ConfigManager;
 
 /**
  * The router is responsible for dispatching requests to the correct handler
@@ -93,6 +94,7 @@ final class Router
             template: "error/404",
             parameters: [
                 'path' => $path,
+                'baseUrl' => ConfigManager::get()->baseUrl,
             ],
             statusCode: 404,
         );

@@ -108,6 +108,7 @@ final class ShareController extends BaseController
                     'base' => $basename,
                     'share' => $share,
                     'relativePath' => '',
+                    'baseUrl' => ConfigManager::get()->baseUrl,
                     'entries' => [
                         [
                             'name' => $basename,
@@ -147,6 +148,7 @@ final class ShareController extends BaseController
                 'base' => basename($directoryPath),
                 'share' => $share,
                 'relativePath' => $relativePath,
+                'baseUrl' => ConfigManager::get()->baseUrl,
                 'entries' => DirectoryBrowser::listDirectory(
                     $directoryPath,
                     $relativePath,
@@ -184,6 +186,6 @@ final class ShareController extends BaseController
      */
     private function notFound(): Response
     {
-        return new TemplateResponse('share/not-found', [], 404);
+        return new TemplateResponse('share/not-found', ['baseUrl' => ConfigManager::get()->baseUrl], 404);
     }
 }

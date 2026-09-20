@@ -2,7 +2,8 @@
 /**
  * Shared directory listing
  *
- * @var string $baseUrl
+ * @var string $baseUrl Base path prefix for the l() function (e.g. "/test/abc")
+ * @var string $entryBaseUrl Full base URL for entry links (e.g. "/test/abc/admin/browse")
  * @var list<array{
  *     name: string,
  *     isDir: bool,
@@ -33,7 +34,7 @@ if (!function_exists('encodePath')) {
             $name = e($entry['name']);
             $path = $entry['relativePath'];
 
-            $entryUrl = $baseUrl . '/' . encodePath($path);
+            $entryUrl = $entryBaseUrl . '/' . encodePath($path);
             $selectUrl = $selectBaseUrl !== null
                 ? $selectBaseUrl . '?path=' . rawurlencode($path)
                 : null;
@@ -45,21 +46,21 @@ if (!function_exists('encodePath')) {
 
             <li class="directory-list--item">
                 <?php if ($isDir): ?>
-                    <img src="/assets/icon/folder.svg" alt="Folder">
+                    <img src="<?= l('/assets/icon/folder.svg') ?>" alt="Folder" class="icon">
                 <?php else: ?>
-                    <img src="/assets/icon/file.svg" alt="File">
+                    <img src="<?= l('/assets/icon/file.svg') ?>" alt="File" class="icon">
                 <?php endif; ?>
 
                 <?php if ($isSelectableFile): ?>
                     <?= $name ?>
                 <?php else: ?>
-                    <a href="<?= e($entryUrl) ?>">
+                    <a href="<?= $entryUrl ?>">
                         <?= $name ?><?=  $isDir ? '/' : '' ?>
                     </a>
                 <?php endif; ?>
 
                 <?php if ($selectUrl !== null): ?>
-                    <span class="right"><a href="<?= e($selectUrl) ?>">Select</a></span>
+                    <span class="right"><a href="<?= l($selectUrl) ?>">Select</a></span>
                 <?php endif; ?>
             </li>
         <?php endforeach; ?>
@@ -70,6 +71,6 @@ if (!function_exists('encodePath')) {
 
 <?php if ($backUrl !== null): ?>
     <p class="margin-top-6">
-        <a href="<?= e($backUrl) ?>">Back to root</a>
+        <a href="<?= l($backUrl) ?>">Back to root</a>
     </p>
 <?php endif; ?>

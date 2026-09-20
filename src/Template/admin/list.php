@@ -2,12 +2,14 @@
 /**
  * @var \KittyShare\Model\User $user
  * @var list<\KittyShare\Model\Share> $shares
- * @var string|null $baseUrl
+ * @var string $baseUrl
+ * @var string|null $shareBaseUrl
  */
 ?>
 <?php
 require_once __DIR__ . '/../partials/base.php';
 
+$GLOBALS['__kittyshare_base'] = $baseUrl;
 renderHeader("Admin");
 ?>
 <main>
@@ -21,7 +23,7 @@ renderHeader("Admin");
         </div>
 
         <p>
-            <a href="/admin/browse" class="button">Create new share</a>
+            <a href="<?= l('/admin/browse') ?>" class="button">Create new share</a>
         </p>
     </div>
 
@@ -47,19 +49,18 @@ renderHeader("Admin");
                     <?php
                         $shareLink = '/share/' . rawurlencode($share->id);
 
-                        if (($baseUrl ?? null) !== null && $baseUrl !== '') {
-                            $shareLink = $baseUrl . $shareLink;
+                        if (($shareBaseUrl ?? null) !== null && $shareBaseUrl !== '') {
+                            $shareLink = $shareBaseUrl . $shareLink;
                         }
                     ?>
-                    <a href="<?= $shareLink ?>">
+                    <a href="<?= l($shareLink) ?>">
                     <?php endif; ?>
                         <?= e(basename($share->filepath) !== '' ? basename($share->filepath) : $share->filepath) ?>
                     <?php if ($isActive): ?>
                     </a>
                     <?php endif; ?>
 
-                    <!-- TODO: Correct link with baseUrl -->
-                    <span class="right"><a href="/admin/shares/<?= e($share->id) ?>">Edit</a></span>
+                    <span class="right"><a href="<?= l('/admin/shares/' . e($share->id)) ?>">Edit</a></span>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -67,7 +68,7 @@ renderHeader("Admin");
         <p>No shares yet.</p>
     <?php endif; ?>
 
-    <form method="post" action="/logout" class="margin-top-6">
+    <form method="post" action="<?= l('/logout') ?>" class="margin-top-6">
         <button type="submit" class="button bg-danger-hover">Log out</button>
     </form>
 </main>

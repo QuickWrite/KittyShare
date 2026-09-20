@@ -1,17 +1,15 @@
 <?php
 /**
  * @var \KittyShare\Model\Share $share
- * @var string|null $baseUrl
+ * @var string $baseUrl
  */
 ?>
 <?php
 require_once __DIR__ . '/../partials/base.php';
 
-$shareLink = '/share/' . rawurlencode($share->id);
+$GLOBALS['__kittyshare_base'] = $baseUrl;
 
-if (($baseUrl ?? null) !== null && $baseUrl !== '') {
-    $shareLink = $baseUrl . $shareLink;
-}
+$shareLink = '/share/' . rawurlencode($share->id);
 
 renderHeader("Manage share");
 ?>
@@ -19,13 +17,13 @@ renderHeader("Manage share");
     <div class="left-right">
         <h1 class="title">Manage share</h1>
 
-        <form method="post" action="/admin/shares/<?= e($share->id) ?>/delete" class="margin-top-3">
+        <form method="post" action="<?= l('/admin/shares/' . e($share->id) . '/delete') ?>" class="margin-top-3">
             <button type="submit" class="button bg-danger-hover">Delete</button>
         </form>
     </div>
 
     <p class="margin-top-3">
-        <span class="infopoint">Link:</span> <a href="<?= e($shareLink) ?>"><?= e($shareLink) ?></a>
+        <span class="infopoint">Link:</span> <a href="<?= l($shareLink) ?>"><?= e(l($shareLink)) ?></a>
     </p>
 
     <p><span class="infopoint">Path:</span> <code class="path"><?= e($share->filepath) ?></code></p>
@@ -41,17 +39,17 @@ renderHeader("Manage share");
     </p>
 
     <?php if ($share->isRevoked()): ?>
-        <form method="post" action="/admin/shares/<?= e($share->id) ?>/unrevoke" class="margin-top-6">
+        <form method="post" action="<?= l('/admin/shares/' . e($share->id) . '/unrevoke') ?>" class="margin-top-6">
             <button type="submit" class="button bg-warning-hover">Unrevoke</button>
         </form>
     <?php else: ?>
-        <form method="post" action="/admin/shares/<?= e($share->id) ?>/revoke" class="margin-top-6">
+        <form method="post" action="<?= l('/admin/shares/' . e($share->id) . '/revoke') ?>" class="margin-top-6">
             <button type="submit" class="button bg-warning-hover">Revoke</button>
         </form>
     <?php endif; ?>
 
     <p class="margin-top-3">
-        <a href="/admin">Back to admin</a>
+        <a href="<?= l('/admin') ?>">Back to admin</a>
     </p>
 </main>
 <?php

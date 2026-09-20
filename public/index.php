@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use KittyShare\Controller\{AdminController, LoginController, LogoutController, SetupController, ShareController};
-use KittyShare\Manager\DependencyManager;
+use KittyShare\Manager\{DependencyManager, ConfigManager};
 use KittyShare\Http\{Router, Method};
 
 $dependencies = DependencyManager::get();
@@ -60,6 +60,12 @@ if ($method === null) {
 if (!is_string($path)) {
     http_response_code(500);
     exit;
+}
+
+$basePath = ConfigManager::basePath();
+
+if ($basePath !== '' && str_starts_with($path, $basePath)) {
+    $path = substr($path, strlen($basePath)) ?: '/';
 }
 
 $router->dispatch($method, $path)->send();

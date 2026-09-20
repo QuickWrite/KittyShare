@@ -11,7 +11,7 @@ renderHeader("Could not find path");
 <main>
     <h1 class="title">Could not find the path provided</h1>
 
-    <p><a href="/share/<?= htmlspecialchars($share->id) ?>">Back to root</a></p>
+    <p><a href="<?= l('/share/' . htmlspecialchars($share->id)) ?>">Back to root</a></p>
 </main>
 <?php 
 renderFooter();

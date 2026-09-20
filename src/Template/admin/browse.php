@@ -3,6 +3,7 @@
  * @var string $root
  * @var string $directoryPath
  * @var string $relativePath
+ * @var string $baseUrl
  * @var list<array{
  *     name: string,
  *     isDir: bool,
@@ -13,6 +14,7 @@
 <?php
 require_once __DIR__ . '/../partials/base.php';
 
+$GLOBALS['__kittyshare_base'] = $baseUrl;
 renderHeader("Select path for new share");
 ?>
 <main>
@@ -21,20 +23,18 @@ renderHeader("Select path for new share");
     <p>Browsing: <?= e($directoryPath) ?></p>
 
     <p class="margin-top-3 margin-bottom-3">
-        <a href="<?= e(
-            '/admin/shares/new?path=' . rawurlencode($relativePath === '' ? '/' : $relativePath)
-        ) ?>">Select this folder</a>
+        <a href="<?= l('/admin/shares/new?path=' . rawurlencode($relativePath === '' ? '/' : $relativePath)) ?>">Select this folder</a>
     </p>
 
     <?php
-    $baseUrl = '/admin/browse';
+    $entryBaseUrl = $baseUrl . '/admin/browse';
     $backUrl = '/admin/browse';
-    $selectBaseUrl = '/admin/shares/new';
+    $selectBaseUrl = l('/admin/shares/new');
     require __DIR__ . '/../partials/directory-list.php';
     ?>
 
     <p class="margin-top-3">
-        <a href="/admin">Back to admin</a>
+        <a href="<?= l('/admin') ?>">Back to admin</a>
     </p>
 </main>
 <?php

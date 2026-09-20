@@ -138,7 +138,15 @@ final class ConfigManager {
     }
 
     /**
-     * @return string|null The base URL without trailing slash, or null when unset or invalid.
+     * Generates the base url for the given environment variable.
+     *
+     * Accepts:
+     * - Full URLs: "https://files.example.com/test"
+     * - Host+path without protocol: "127.0.0.1:3000/public"
+     * - Bare paths: "/public"
+     *
+     * @return string|null The base URL without trailing slash, or null when
+     *                     unset or invalid.
      */
     private static function baseUrl(): ?string
     {
@@ -150,10 +158,49 @@ final class ConfigManager {
 
         $value = rtrim(trim($value), '/');
 
-        if (!str_starts_with(strtolower($value), 'http://') && !str_starts_with(strtolower($value), 'https://')) {
+        if ($value === '') {
             return null;
         }
 
-        return $value;
+        if (str_starts_with(strtolower($value), 'http://') || str_starts_with(strtolower($value), 'https://')) {
+            return $value;
+        }
+
+        if ($value[0] === '/') {
+            return $value;
+        }
+
+        if (str_contains($value, '/')) {
+            return 'http://' . $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the path portion of the base URL for use as an internal route
+     * prefix.
+     *
+     * For example, "https://files.example.com/test/abc" returns "/test/abc".
+     *
+     * Returns "" when no base URL is configured or when the path is just "/".
+     *
+     * @return string The base path
+     */
+    public static function basePath(): string
+    {
+        $base = self::get()->baseUrl;
+
+        if ($base === null) {
+            return '';
+        }
+
+        $path = parse_url($base, PHP_URL_PATH);
+
+        if (!is_string($path) || $path === '' || $path === '/') {
+            return '';
+        }
+
+        return $path;
     }
 }

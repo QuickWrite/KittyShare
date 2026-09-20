@@ -1,4 +1,5 @@
 <?php
+
 function e(string $value): string
 {
     return htmlspecialchars(
@@ -6,6 +7,17 @@ function e(string $value): string
         ENT_QUOTES | ENT_SUBSTITUTE,
         'UTF-8',
     );
+}
+
+function l(string $link): string {
+    /** @var string|null */
+    $prefix = $GLOBALS['__kittyshare_base'] ?? null;
+
+    if ($prefix === null || $prefix === '') {
+        return $link;
+    }
+
+    return $prefix . $link;
 }
 
 function renderHeader(string $title): void {
@@ -17,13 +29,12 @@ function renderHeader(string $title): void {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title) ?> | KittyShare</title>
 
-    <!-- TODO: Add base path to enable other configuations than just the root -->
-    <link rel="stylesheet" href="/assets/style.css">
+    <link rel="stylesheet" href="<?= l('/assets/style.css') ?>">
 </head>
 <body>
     <header class="header">
         <div class="header--icon">
-            <img src="/assets/logo/kittyshare-logo-light.svg" alt="" /> <span>KittyShare</span>
+            <img src="<?= l('/assets/logo/kittyshare-logo-light.svg') ?>" alt="" /> <span>KittyShare</span>
         </div>
     </header>
 <?php
