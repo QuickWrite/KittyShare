@@ -29,6 +29,9 @@ function renderHeader(string $title): void {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($title) ?> | KittyShare</title>
 
+    <link rel="icon" type="image/png" href="<?= l('/assets/logo/favicon-96x96.png') ?>" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="<?= l('/assets/logo/kittyshare-logo-light.svg') ?>" />
+
     <link rel="stylesheet" href="<?= l('/assets/style.css') ?>">
 </head>
 <body>
