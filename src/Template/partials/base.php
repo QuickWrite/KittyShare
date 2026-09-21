@@ -40,7 +40,7 @@ function renderHeader(string $title, array $options = []): void
     if (array_key_exists('description', $options)) {
         $metaDescription = $options['description'];
     } else {
-        $config ??= \KittyShare\Manager\ConfigManager::get();
+        $config = \KittyShare\Manager\ConfigManager::get();
         $metaDescription = $config->metaDescription;
     }
 
