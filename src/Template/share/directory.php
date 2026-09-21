@@ -18,7 +18,39 @@ $GLOBALS['__kittyshare_base'] = $baseUrl;
 
 $shareUrl = '/share/' . rawurlencode((string) $share->id);
 
-renderHeader("Shared directory " . $base);
+if (\KittyShare\Manager\ConfigManager::get()->metaOgMode !== 'none') {
+    $fileCount = 0;
+    $dirCount = 0;
+    foreach ($entries as $entry) {
+        if ($entry['isDir']) {
+            $dirCount++;
+        } else {
+            $fileCount++;
+        }
+    }
+
+    if ($fileCount === 0 && $dirCount === 0) {
+        $ogDescription = 'Empty folder';
+    } elseif ($dirCount === 0) {
+        $ogDescription = $fileCount === 1 ? '1 file' : $fileCount . ' files';
+    } elseif ($fileCount === 0) {
+        $ogDescription = $dirCount === 1 ? '1 folder' : $dirCount . ' folders';
+    } else {
+        $ogDescription = ($fileCount === 1 ? '1 file' : $fileCount . ' files')
+            . ', '
+            . ($dirCount === 1 ? '1 folder' : $dirCount . ' folders');
+    }
+
+    $ogUrl = null;
+
+    renderHeader("Shared directory " . $base, [
+        'ogTitle' => $base . ' ~ shared via KittyShare',
+        'ogDescription' => $ogDescription,
+        'ogUrl' => $ogUrl,
+    ]);
+} else {
+    renderHeader("Shared directory " . $base);
+}
 ?>
 <main>
     <h1 class="title">Share of <?= e($base) ?></h1>

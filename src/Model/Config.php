@@ -16,6 +16,8 @@ final readonly class Config
      * @param bool $showDotfiles
      * @param ?string $baseUrl
      * @param positive-int $downloadChunkSize
+     * @param ?string $metaDescription
+     * @param 'none'|'minimal'|'per-share' $metaOgMode
      */
     public function __construct(
         /** Path to the SQLite database file. */
@@ -46,6 +48,19 @@ final readonly class Config
 
         /** Number of bytes sent per chunk when downloading files. */
         public int $downloadChunkSize,
+
+        /**
+         * Generic meta description text, or null to omit the tag.
+         */
+        public ?string $metaDescription,
+
+        /**
+         * Open Graph extensiveness:
+         * - 'none' omits all og:* tags,
+         * - 'minimal' emits only generic site tags,
+         * - 'per-share' additionally allows per-share og:title.
+         */
+        public string $metaOgMode,
     ) {
     }
 }

@@ -98,6 +98,8 @@ file as a reference:
 | `KITTYSHARE_SHOW_DOTFILES`       | Whether dotfiles should appear in file listings.                       | `false`            |
 | `KITTYSHARE_BASE_URL`            | Canonical base URL used when generating absolute links.                | Relative links     |
 | `KITTYSHARE_DOWNLOAD_CHUNK_SIZE` | Number of bytes sent per download chunk.                               | `8192`             |
+| `KITTYSHARE_META_DESCRIPTION`    | Generic meta description text. Omitted when unset.                     | Omitted            |
+| `KITTYSHARE_META_OG_MODE`        | Open Graph tags: `none`, `minimal`, or `per-share`.                    | `none`             |
 
 Make sure the user running PHP can read the application files and has the
 necessary permissions to create or modify the SQLite database. The configured
@@ -113,6 +115,14 @@ path. It accepts three formats:
 When set, all internal links (navigation, assets, redirects) are automatically
 prefixed with the path portion. Share links displayed to users include the full
 canonical URL when a full URL is provided, or the path-relative URL otherwise.
+
+All pages send `robots: noindex, nofollow` and `referrer: no-referrer` to keep
+private shares out of search indexes and to avoid leaking share URLs to external
+sites. `KITTYSHARE_META_OG_MODE` controls link previews: `none` emits no `og:*`
+tags (default), `minimal` emits only generic site tags, and `per-share`
+additionally exposes the shared folder/file name as `og:title` (with context),
+file/folder counts as `og:description`, and the app logo as `og:image` on share
+pages.
 
 ## Screenshots
 
