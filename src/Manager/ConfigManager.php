@@ -36,6 +36,8 @@ final class ConfigManager {
                 'KITTYSHARE_DOWNLOAD_CHUNK_SIZE',
                 8192,
             ),
+            metaDescription: self::metaDescription(),
+            metaOgMode: self::metaOgMode(),
         );
     }
 
@@ -175,6 +177,45 @@ final class ConfigManager {
         }
 
         return null;
+    }
+
+    /**
+     * Reads the generic meta description.
+     *
+     * Empty/unset means "omit the tag" (default).
+     *
+     * @return string|null The configured text, or null when unset.
+     */
+    private static function metaDescription(): ?string
+    {
+        $value = self::env('KITTYSHARE_META_DESCRIPTION');
+
+        if ($value === null || trim($value) === '') {
+            return null;
+        }
+
+        return $value;
+    }
+
+    /**
+     * Reads the Open Graph extensiveness mode.
+     *
+     * @return 'none'|'minimal'|'per-share' The configured mode; 'none' when unset or invalid.
+     */
+    private static function metaOgMode(): string
+    {
+        $value = self::env('KITTYSHARE_META_OG_MODE');
+
+        if ($value === null) {
+            return 'none';
+        }
+
+        return match (strtolower(trim($value))) {
+            'none' => 'none',
+            'minimal' => 'minimal',
+            'per-share', 'per_share', 'full', 'per-share-full' => 'per-share',
+            default => 'none',
+        };
     }
 
     /**
