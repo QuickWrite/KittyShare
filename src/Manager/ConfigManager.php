@@ -3,8 +3,10 @@
 namespace KittyShare\Manager;
 
 use KittyShare\Model\Config;
+use KittyShare\Http\FileServerType;
 
-final class ConfigManager {
+final class ConfigManager
+{
     private static ?Config $config = null;
 
     public static function get(): Config
@@ -38,6 +40,7 @@ final class ConfigManager {
             ),
             metaDescription: self::metaDescription(),
             metaOgMode: self::metaOgMode(),
+            fileServer: self::fileServer(),
         );
     }
 
@@ -215,6 +218,28 @@ final class ConfigManager {
             'minimal' => 'minimal',
             'per-share', 'per_share', 'full', 'per-share-full' => 'per-share',
             default => 'none',
+        };
+    }
+
+    /**
+     * Reads the file-serving backend.
+     *
+     * Accepts `php` (default, streams through PHP) and `x-sendfile`
+     * (delegates to Apache via mod_xsendfile). `apache` is accepted as
+     * an alias of `x-sendfile`. Unknown or unset values fall back to `php`.
+     */
+    private static function fileServer(): FileServerType
+    {
+        $value = self::env('KITTYSHARE_FILE_SERVER');
+
+        if ($value === null) {
+            return FileServerType::Php;
+        }
+
+        return match (strtolower(trim($value))) {
+            'php', 'php-stream'    => FileServerType::Php,
+            'apache', 'x-sendfile' => FileServerType::XSendfile,
+            default => FileServerType::Php,
         };
     }
 

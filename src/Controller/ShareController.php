@@ -2,7 +2,7 @@
 
 namespace KittyShare\Controller;
 
-use KittyShare\Http\{Request, Response, TemplateResponse, FileResponse};
+use KittyShare\Http\{Request, Response, TemplateResponse, FileResponseFactory};
 use KittyShare\Manager\ConfigManager;
 use KittyShare\Filesystem\DirectoryBrowser;
 use KittyShare\Model\Share;
@@ -169,7 +169,7 @@ final class ShareController extends BaseController
     {
         $contentType = mime_content_type($path);
 
-        return new FileResponse(
+        return FileResponseFactory::forFile(
             $path,
             $contentType !== false
                 ? $contentType
