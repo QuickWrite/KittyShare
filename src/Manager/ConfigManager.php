@@ -20,7 +20,7 @@ final class ConfigManager {
     {
         return new Config(
             databasePath: self::env('KITTYSHARE_DATABASE_PATH')
-                ?? __DIR__ . '/../database.sqlite',
+                ?? __DIR__ . '/../../database.sqlite',
             browseRoot: self::resolveBrowseRoot(
                 self::env('KITTYSHARE_ROOT')
             ),
