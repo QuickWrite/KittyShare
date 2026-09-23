@@ -2,6 +2,8 @@
 
 namespace KittyShare\Model;
 
+use KittyShare\Http\FileServerType;
+
 
 final readonly class Config
 {
@@ -18,6 +20,7 @@ final readonly class Config
      * @param positive-int $downloadChunkSize
      * @param ?string $metaDescription
      * @param 'none'|'minimal'|'per-share' $metaOgMode
+     * @param FileServerType $fileServer
      */
     public function __construct(
         /** Path to the SQLite database file. */
@@ -61,6 +64,9 @@ final readonly class Config
          * - 'per-share' additionally allows per-share og:title.
          */
         public string $metaOgMode,
+
+        /** Backend used to send shared files. */
+        public FileServerType $fileServer,
     ) {
     }
 }

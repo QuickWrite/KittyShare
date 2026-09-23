@@ -97,9 +97,16 @@ file as a reference:
 | `KITTYSHARE_COOKIE_SECURE`       | Whether to mark the session cookie as secure.                          | Automatic          |
 | `KITTYSHARE_SHOW_DOTFILES`       | Whether dotfiles should appear in file listings.                       | `false`            |
 | `KITTYSHARE_BASE_URL`            | Canonical base URL used when generating absolute links.                | Relative links     |
-| `KITTYSHARE_DOWNLOAD_CHUNK_SIZE` | Number of bytes sent per download chunk.                               | `8192`             |
+| `KITTYSHARE_DOWNLOAD_CHUNK_SIZE` | Number of bytes sent per download chunk (PHP file server only).        | `8192`             |
+| `KITTYSHARE_FILE_SERVER`         | File server backend: `php` or `x-sendfile` (`apache` alias).           | `php`              |
 | `KITTYSHARE_META_DESCRIPTION`    | Generic meta description text. Omitted when unset.                     | Omitted            |
 | `KITTYSHARE_META_OG_MODE`        | Open Graph tags: `none`, `minimal`, or `per-share`.                    | `none`             |
+
+Setting `KITTYSHARE_FILE_SERVER=x-sendfile` makes PHP authorize the share
+request and then delegate the transfer to Apache via `mod_xsendfile`. This frees
+PHP workers on large files and lets Apache handle range requests. It requires
+`XSendFile On` plus a matching `XSendFilePath` (see
+[`apache-vhost.conf`](apache-vhost.conf)).
 
 Make sure the user running PHP can read the application files and has the
 necessary permissions to create or modify the SQLite database. The configured
