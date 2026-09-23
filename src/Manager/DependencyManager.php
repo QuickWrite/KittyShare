@@ -3,7 +3,14 @@
 namespace KittyShare\Manager;
 
 use KittyShare\Model\Dependencies;
-use KittyShare\Repository\{SQLiteUserRepository, SQLiteDatabase, SQLiteSessionRepository, SQLiteSetupRepository, SQLiteShareRepository};
+use KittyShare\Database\SQLiteDatabase;
+use KittyShare\Repository\{
+    SQLiteUserRepository,
+    SQLiteSessionRepository,
+    SQLiteSetupRepository,
+    SQLiteShareRepository,
+    SQLiteDBVersionRepository
+};
 
 class DependencyManager
 {
@@ -22,12 +29,15 @@ class DependencyManager
     {
         $config = ConfigManager::get();
 
-        $database = new SQLiteDatabase($config->databasePath);
+        $pdo = SQLiteDatabase::connect($config->databasePath);
 
-        $userRepository = new SQLiteUserRepository($database->getInstance());
-        $setupRepository = new SQLiteSetupRepository($database->getInstance());
-        $sessionRepository = new SQLiteSessionRepository($database->getInstance(), $config->sessionLifetime);
-        $shareRepository = new SQLiteShareRepository($database->getInstance());
+        // Ensure database has correct version
+        (new SQLiteDBVersionRepository($pdo))->ensureValid($config->databasePath);
+
+        $userRepository = new SQLiteUserRepository($pdo);
+        $setupRepository = new SQLiteSetupRepository($pdo);
+        $sessionRepository = new SQLiteSessionRepository($pdo, $config->sessionLifetime);
+        $shareRepository = new SQLiteShareRepository($pdo);
         $authenticationManager = new AuthenticationManager($userRepository, $sessionRepository);
 
         return new Dependencies(

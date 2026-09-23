@@ -1,6 +1,6 @@
 <?php
 
-namespace KittyShare\Repository\Migration;
+namespace KittyShare\Database\Migration;
 
 use PDO;
 

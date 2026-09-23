@@ -32,6 +32,10 @@ from releases are tagged with the release version, such as `v1.2.0`. The
 `latest` tag always points to the latest release and **not** to the latest
 commit.
 
+The container migrates the SQLite database schema automatically at startup (via
+`docker-entrypoint.sh` running `php bin/migrate`) before Apache starts. A failed
+migration aborts container startup.
+
 For configuring the application look at the section [Environment Variables](#environment-variables).
 
 ### Running directly on a PHP server
@@ -44,6 +48,14 @@ First, clone the repository and install the Composer dependencies:
 git clone https://github.com/QuickWrite/KittyShare
 cd KittyShare
 composer install --no-dev --optimize-autoloader
+```
+
+Then migrate the SQLite database schema (also required after updating to a new
+release, before serving traffic):
+
+```sh
+php bin/migrate
+# or: composer migrate
 ```
 
 Configure your web server with `public/` as the document root:
@@ -159,6 +171,7 @@ Internal PHP files can be found in the [`src/`](src)-folder. It is divided into:
 - `Http`       - Everything that has to do with the request and response. As such the Router and the response classes are in here.
 - `Manager`    - The classes that do not directly access resources, but manage these based on the repositories.
 - `Repository` - A simple abstraction of a specific resource. For example the SQLite database.
+- `Database`   - Connection and migrations for the databases. The glue code of the database and the application repositories/migration scripts.
 - `Controller` - The classes that decide on what to do with the request. They call the correct repositories, managers and return some response object.
 - `Model`      - The classes that model the data that can be found in the project
 - `Template`   - Templates that return HTML based on the data. They are also PHP files.

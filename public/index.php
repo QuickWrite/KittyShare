@@ -4,9 +4,20 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use KittyShare\Controller\{AdminController, LoginController, LogoutController, SetupController, ShareController};
 use KittyShare\Manager\{DependencyManager, ConfigManager};
+use KittyShare\Database\DatabaseVersionException;
 use KittyShare\Http\{Router, Method};
 
-$dependencies = DependencyManager::get();
+try {
+    $dependencies = DependencyManager::get();
+} catch (DatabaseVersionException $e) {
+    http_response_code(500);
+
+    header('Content-Type: text/plain; charset=utf-8');
+
+    echo $e->getMessage();
+
+    exit;
+}
 
 $router = new Router($dependencies);
 

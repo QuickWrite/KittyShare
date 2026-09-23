@@ -1,8 +1,8 @@
 <?php
 
-namespace KittyShare\Repository\Migration\sqlite;
+namespace KittyShare\Database\Migration\sqlite;
 
-use KittyShare\Repository\Migration\Migration;
+use KittyShare\Database\Migration\Migration;
 use PDO;
 use Override;
 
