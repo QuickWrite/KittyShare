@@ -18,9 +18,11 @@
         "lint": "find src public bin -type f \\( -name '*.php' -o -path '*/bin/*' \\) -exec php -l {} \\;",
         "analyse": "vendor/bin/phpstan analyse --no-progress",
         "migrate": "php bin/migrate",
+        "check:migrations": "php bin/validate-migrations",
         "ci": [
             "@lint",
-            "@analyse"
+            "@analyse",
+            "@check:migrations"
         ],
         "test": "echo 'No test suite yet.' && exit 1",
         "start": "php -S localhost:8000 -t public"
