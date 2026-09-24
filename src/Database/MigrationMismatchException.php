@@ -15,7 +15,7 @@ final class MigrationMismatchException extends RuntimeException
     ) {
         parent::__construct(
             "Migration file version V{$fileVersion} exceeds expected schema version {$expectedVersion}. " .
-            'Bump DBVersionRepository::EXPECTED_VERSION in the same commit as the new migration file.',
+            'Bump the EXPECTED_VERSION in the same commit as the new migration file.',
         );
     }
 }
