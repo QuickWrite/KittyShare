@@ -1,0 +1,86 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Validates that the SQLite migration files are in sync with the expected schema version.
+ *
+ * Checks:
+ *   - every file in src/Database/Migration/sqlite matches V{version}_{name}.php
+ *   - no duplicate versions, no gaps (versions must be 1..max contiguous)
+ *   - highest migration version equals SQLiteDBVersionRepository::EXPECTED_VERSION
+ *
+ * Exit codes: 0 when in sync, 1 on mismatch.
+ */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use KittyShare\Repository\SQLiteDBVersionRepository;
+
+if (php_sapi_name() !== 'cli') {
+    fwrite(STDERR, "The script can only be executed from the command line.");
+
+    exit(1);
+}
+
+$migrationsDir = __DIR__ . '/../src/Database/Migration/sqlite';
+
+$files = glob("{$migrationsDir}/V*_*.php");
+
+if ($files === false) {
+    fwrite(STDERR, "Could not read migration directory: {$migrationsDir}\n");
+
+    exit(1);
+}
+
+$versions = [];
+
+$versionError = false;
+
+foreach ($files as $file) {
+    if (preg_match('/\/V(\d+)_.*\.php$/', $file, $m) !== 1) {
+        fwrite(STDERR, "Invalid migration filename (expected V{version}_{name}.php): {$file}\n");
+
+        $versionError = true;
+    }
+
+    $versions[] = (int) $m[1];
+}
+
+if ($versionError) {
+    exit(1);
+}
+
+sort($versions);
+
+$unique = array_values(array_unique($versions));
+
+if ($unique !== $versions) {
+    fwrite(STDERR, "Duplicate migration versions detected.\n");
+
+    exit(1);
+}
+
+$max = $versions === [] ? 0 : $versions[count($versions) - 1];
+$expectedRange = $max === 0 ? [] : range(1, $max);
+
+if ($versions !== $expectedRange) {
+    fwrite(STDERR, 'Migration versions must be contiguous starting at V1 without gaps. Found: V' . implode(', V', $versions) . "\n");
+
+    exit(1);
+}
+
+$expected = SQLiteDBVersionRepository::EXPECTED_VERSION;
+
+if ($max !== $expected) {
+    fwrite(
+        STDERR,
+        "Migration version mismatch: highest migration file is V{$max} but SQLiteDBVersionRepository::EXPECTED_VERSION is {$expected}. " .
+        "Bump EXPECTED_VERSION in the same commit as the new migration file.\n"
+    );
+
+    exit(1);
+}
+
+echo "Migrations in sync (highest version V{$max} matches EXPECTED_VERSION {$expected}).\n";
+
+exit(0);

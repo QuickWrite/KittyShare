@@ -30,8 +30,13 @@ RUN mkdir -p /var/www/data \
 # Apache configuration
 COPY apache-vhost.conf /etc/apache2/sites-available/000-default.conf
 
+# Entrypoint script
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
 USER www-data
 
 ENV KITTYSHARE_FILE_SERVER=x-sendfile
 ENV KITTYSHARE_DATABASE_PATH=/var/www/data/database.sqlite
 ENV KITTYSHARE_ROOT=/data/files
+
+ENTRYPOINT ["docker-entrypoint.sh"]

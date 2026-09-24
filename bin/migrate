@@ -1,0 +1,51 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Migrates the SQLite database schema to the latest version.
+ *
+ * Usage:
+ *   php bin/migrate          (uses KITTYSHARE_DATABASE_PATH or the default)
+ *   composer migrate
+ *
+ * Exit codes: 0 when the database is up to date (or was migrated
+ * successfully), 1 on failure.
+ */
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use KittyShare\Manager\ConfigManager;
+use KittyShare\Database\SQLiteDatabase;
+use KittyShare\Database\SQLiteMigrator;
+use KittyShare\Repository\SQLiteDBVersionRepository;
+
+if (php_sapi_name() !== 'cli') {
+    fwrite(STDERR, "The script can only be executed from the command line.");
+
+    exit(1);
+}
+
+$databasePath = ConfigManager::get()->databasePath;
+
+$parentDir = dirname($databasePath);
+
+if (!is_dir($parentDir) && !@mkdir($parentDir, 0777, true) && !is_dir($parentDir)) {
+    fwrite(STDERR, "Could not create database directory: {$parentDir}\n");
+    exit(1);
+}
+
+try {
+    $pdo = SQLiteDatabase::connect($databasePath);
+    $applied = SQLiteMigrator::migrate($pdo);
+} catch (Throwable $e) {
+    fwrite(STDERR, 'Migration failed: ' . $e->getMessage() . "\n");
+    exit(1);
+}
+
+if ($applied === []) {
+    echo "Database is up to date (version " . (new SQLiteDBVersionRepository($pdo))->currentVersion() . ").\n";
+} else {
+    echo 'Applied migrations: V' . implode(', V', $applied) . "\n";
+}
+
+exit(0);
