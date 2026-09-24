@@ -32,7 +32,7 @@ final class SQLiteDBVersionRepository extends AbstractSQLiteRepository implement
     {
         $current = $this->currentVersion();
 
-        if ($this->isValid()) {
+        if (!$this->isValid()) {
             throw new DatabaseVersionException($current, self::EXPECTED_VERSION, $path);
         }
     }
