@@ -16,7 +16,7 @@ use function sort;
  */
 final class SQLiteMigrator
 {
-    private static string $migration_namespace = 'KittyShare\\Database\\Migration\\sqlite';
+    private const MIGRATION_NAMESPACE = 'KittyShare\\Database\\Migration\\sqlite';
 
     /**
      * Applies all pending migrations and returns the versions that were applied.
@@ -48,7 +48,7 @@ final class SQLiteMigrator
             }
 
             require_once $file;
-            $className = self::$migration_namespace . "\\MigrationV{$fileVersion}";
+            $className = self::MIGRATION_NAMESPACE . "\\MigrationV{$fileVersion}";
 
             if (!is_subclass_of($className, Migration::class)) {
                 continue;
