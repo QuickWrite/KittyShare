@@ -9,6 +9,7 @@ use Exception;
 
 use function count;
 use function assert;
+use function natsort;
 
 /**
  * Applies pending SQLite schema migrations.
@@ -81,7 +82,9 @@ final class SQLiteMigrator
             return [];
         }
 
-        sort($files);
+        // Ensure that the items are sorted by their "natural" sorting order (e.g. 9 before 10).
+        // ["V10_a.php", "V9_b.php", "V11_c.php"] => ["V9_b.php", "V10_a.php", "V11_c.php"]
+        natsort($files);
 
         return $files;
     }
