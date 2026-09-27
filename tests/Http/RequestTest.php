@@ -90,4 +90,52 @@ final class RequestTest extends TestCase
         $this->assertNull($request->post('username'));
         $this->assertSame('default', $request->post('username', 'default'));
     }
+
+    #[Test]
+    public function returnsDefaultForMissingQueryKeyWithoutWarning(): void
+    {
+        $_GET = [];
+        $warnings = [];
+
+        set_error_handler(static function (int $errno, string $errstr) use (&$warnings): bool {
+            $warnings[] = $errstr;
+
+            return true;
+        }, E_WARNING);
+
+        try {
+            $request = new Request(Method::Get, '/', []);
+
+            $this->assertNull($request->get('missing'));
+            $this->assertSame('fallback', $request->get('missing', 'fallback'));
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $warnings);
+    }
+
+    #[Test]
+    public function returnsDefaultForMissingPostKeyWithoutWarning(): void
+    {
+        $_POST = [];
+        $warnings = [];
+
+        set_error_handler(static function (int $errno, string $errstr) use (&$warnings): bool {
+            $warnings[] = $errstr;
+
+            return true;
+        }, E_WARNING);
+
+        try {
+            $request = new Request(Method::Post, '/login', []);
+
+            $this->assertNull($request->post('missing'));
+            $this->assertSame('fallback', $request->post('missing', 'fallback'));
+        } finally {
+            restore_error_handler();
+        }
+
+        $this->assertSame([], $warnings);
+    }
 }

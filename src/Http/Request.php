@@ -45,26 +45,26 @@ class Request
     public function get(string $key, ?string $default = null): ?string
     {
         // I am just assuming the $_GET is an array of strings to strings. Which is not the case.
-        if (!is_string($_GET[$key])) {
+        if (!isset($_GET[$key]) || !is_string($_GET[$key])) {
             return $default;
         }
 
         /**
          * @var array<string, string> $_POST
          */
-        return $_GET[$key] ?? $default;
+        return $_GET[$key];
     }
 
     public function post(string $key, ?string $default = null): ?string
     {
         // I am just assuming the $_POST is an array of strings to strings. Which is not the case.
-        if (!is_string($_POST[$key])) {
+        if (!isset($_POST[$key]) || !is_string($_POST[$key])) {
             return $default;
         }
 
         /**
          * @var array<string, string> $_POST
          */
-        return $_POST[$key] ?? $default;
+        return $_POST[$key];
     }
 }
