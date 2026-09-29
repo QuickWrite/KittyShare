@@ -87,6 +87,49 @@ final class TemplateResponseTest extends TestCase
         $this->assertStringNotContainsString('/a<b>', $output);
     }
 
+    #[Test]
+    public function templateNameWithTraversalIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new TemplateResponse('../composer', []);
+    }
+
+    #[Test]
+    public function acceptedValidTemplateNames(): void
+    {
+        foreach (['error/404', 'share/not-found', 'share/directory', 'a1/_-b9'] as $name) {
+            new TemplateResponse($name, []);
+
+            $this->assertTrue(true, "template name '$name' must be accepted");
+        }
+    }
+
+    #[Test]
+    public function rejectedInvalidTemplateNames(): void
+    {
+        $rejected = 0;
+
+        foreach (
+            [
+                '', '/', '/abs/path', 'a//b', 'a/b/', '/a', 'a/./b',
+                '../x', 'x/../y', '..\\win', 'back\\slash', 'with space',
+                'with"quote', "with'apos", 'with<bracket', 'dot.php',
+                'trailing.', '.leading', 'ünïcode', "null\0byte", 'a/b//c'
+            ] as $name
+        ) {
+            try {
+                new TemplateResponse($name, []);
+            } catch (InvalidArgumentException) {
+                $rejected++;
+                continue;
+            }
+
+            $this->fail("template name '$name' must be rejected");
+        }
+
+        $this->assertSame(21, $rejected);
+    }
+
     private function readProperty(object $object, string $name): mixed
     {
         return (new ReflectionProperty($object, $name))->getValue($object);
