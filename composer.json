@@ -12,6 +12,7 @@
         "php": "^8.4"
     },
     "require-dev": {
+        "phpunit/phpunit": "^13",
         "phpstan/phpstan": "^2.2"
     },
     "scripts": {
@@ -22,9 +23,10 @@
         "ci": [
             "@lint",
             "@analyse",
-            "@check:migrations"
+            "@check:migrations",
+            "@test"
         ],
-        "test": "echo 'No test suite yet.' && exit 1",
+        "test": "vendor/bin/phpunit --bootstrap vendor/autoload.php tests",
         "start": "php -S localhost:8000 -t public"
     }
 }

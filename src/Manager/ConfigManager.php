@@ -49,9 +49,15 @@ final class ConfigManager
         if ($configured !== null && $configured !== '') {
             $root = realpath($configured);
 
-            if ($root !== false && is_dir($root)) {
-                return $root;
+            if ($root === false || !is_dir($root)) {
+                throw new InvalidConfigurationException(
+                    'KITTYSHARE_ROOT',
+                    $configured,
+                    'an existing readable directory',
+                );
             }
+
+            return $root;
         }
 
         $root = realpath('/');
@@ -74,19 +80,23 @@ final class ConfigManager
      *
      * @param string        $name    The name of the value
      * @param positive-int  $default The default value
-     * @return positive-int The configured value, or $default when unset or invalid.
+     * @return positive-int The configured value, or $default when unset.
+     *
+     * @throws InvalidConfigurationException If the parsed integer is negative.
      */
     private static function envPosInt(string $name, int $default): int
     {
         $value = self::env($name);
 
-        if ($value === null || !ctype_digit($value)) {
+        if ($value === null) {
             return $default;
         }
 
-        $parsed = (int) $value;
+        if (!ctype_digit($value) || (int) $value <= 0) {
+            throw new InvalidConfigurationException($name, $value, 'a positive integer');
+        }
 
-        return $parsed > 0 ? $parsed : $default;
+        return (int) $value;
     }
 
     /**
@@ -94,7 +104,10 @@ final class ConfigManager
      *
      * Accepts 1/true/yes/on and 0/false/no/off (case-insensitive).
      *
-     * @return bool The configured value, or $default when unset or invalid.
+     * @return bool The configured value, or $default when unset.
+     *
+     * @throws InvalidConfigurationException If the parsed boolean does not have
+     *                                       a valid value.
      */
     private static function envBool(string $name, bool $default): bool
     {
@@ -106,7 +119,10 @@ final class ConfigManager
     /**
      * Reads a boolean setting where null means "not configured".
      *
-     * @return bool|null The configured value, or null when unset or invalid.
+     * @return bool|null The configured value, or null when unset.
+     *
+     * @throws InvalidConfigurationException If the parsed boolean does not have
+     *                                       a valid value.
      */
     private static function envBoolOrNull(string $name): ?bool
     {
@@ -116,15 +132,24 @@ final class ConfigManager
             return null;
         }
 
-        return match (strtolower($value)) {
+        $parsed = match (strtolower($value)) {
             '1', 'true', 'yes', 'on' => true,
             '0', 'false', 'no', 'off' => false,
-            default => null,
+            default => throw new InvalidConfigurationException(
+                $name,
+                $value,
+                'a boolean (1/true/yes/on or 0/false/no/off)'
+            ),
         };
+
+        return $parsed;
     }
 
     /**
-     * @return 'Lax'|'Strict'|'None' One of Lax, Strict or None; Lax when unset or invalid.
+     * @return 'Lax'|'Strict'|'None' One of Lax, Strict or None; Lax when unset.
+     *
+     * @throws InvalidConfigurationException If the parsed value is not Lax,
+     *                                       Strict or None 
      */
     private static function cookieSameSite(): string
     {
@@ -134,12 +159,29 @@ final class ConfigManager
             return 'Lax';
         }
 
-        return match (strtolower($value)) {
+        $parsed = match (strtolower($value)) {
             'lax' => 'Lax',
             'strict' => 'Strict',
             'none' => 'None',
-            default => 'Lax',
+            default => throw new InvalidConfigurationException(
+                'KITTYSHARE_COOKIE_SAMESITE',
+                $value,
+                'one of Lax, Strict or None',
+            ),
         };
+
+        // SameSite=None without the Secure flag is rejected by browsers
+        // (and leaks the cookie cross-site otherwise). An explicitly
+        // disabled Secure flag combined with None refuses to start
+        if ($parsed === 'None' && self::envBoolOrNull('KITTYSHARE_COOKIE_SECURE') === false) {
+            throw new InvalidConfigurationException(
+                'KITTYSHARE_COOKIE_SAMESITE',
+                $value,
+                'Secure cookies (set KITTYSHARE_COOKIE_SECURE=true when using SameSite=None)',
+            );
+        }
+
+        return $parsed;
     }
 
     /**
@@ -151,7 +193,9 @@ final class ConfigManager
      * - Bare paths: "/public"
      *
      * @return string|null The base URL without trailing slash, or null when
-     *                     unset or invalid.
+     *                     unset.
+     *
+     * @throws InvalidConfigurationException If the parsed based URL is invalid
      */
     private static function baseUrl(): ?string
     {
@@ -167,6 +211,21 @@ final class ConfigManager
             return null;
         }
 
+        // A protocol-relative URL ('//evil.com/foo') would turn every
+        // generated link into an external URL, and quotes, angle brackets
+        // or whitespace would break out of HTML attributes the value is
+        // interpolated into. Refuse such values instead of emitting them.
+        if (
+            str_starts_with($value, '//')
+            || preg_match('/["\'<>\s\x00-\x1F\x7F\\\\]/', $value) === 1
+        ) {
+            throw new InvalidConfigurationException(
+                'KITTYSHARE_BASE_URL',
+                $value,
+                'a full URL, host with path, or absolute path without quotes, brackets or whitespace',
+            );
+        }
+
         if (str_starts_with(strtolower($value), 'http://') || str_starts_with(strtolower($value), 'https://')) {
             return $value;
         }
@@ -179,7 +238,11 @@ final class ConfigManager
             return 'http://' . $value;
         }
 
-        return null;
+        throw new InvalidConfigurationException(
+            'KITTYSHARE_BASE_URL',
+            $value,
+            'a full URL, host with path, or absolute path',
+        );
     }
 
     /**
@@ -203,7 +266,11 @@ final class ConfigManager
     /**
      * Reads the Open Graph extensiveness mode.
      *
-     * @return 'none'|'minimal'|'per-share' The configured mode; 'none' when unset or invalid.
+     * @return 'none'|'minimal'|'per-share' The configured mode; 'none' when
+     *                                       unset.
+     *
+     * @throws InvalidConfigurationException If the parsed value does is not a
+     *                                       valid mode
      */
     private static function metaOgMode(): string
     {
@@ -213,20 +280,31 @@ final class ConfigManager
             return 'none';
         }
 
-        return match (strtolower(trim($value))) {
+        $parsed = match (strtolower(trim($value))) {
             'none' => 'none',
             'minimal' => 'minimal',
             'per-share', 'per_share', 'full', 'per-share-full' => 'per-share',
-            default => 'none',
+            default => throw new InvalidConfigurationException(
+                'KITTYSHARE_META_OG_MODE',
+                $value,
+                'one of none, minimal or per-share',
+            ),
         };
+
+        return $parsed;
     }
 
     /**
      * Reads the file-serving backend.
      *
-     * Accepts `php` (default, streams through PHP) and `x-sendfile`
-     * (delegates to Apache via mod_xsendfile). `apache` is accepted as
-     * an alias of `x-sendfile`. Unknown or unset values fall back to `php`.
+     * Accepts `php` (default, streams through PHP) and `x-sendfile` (delegates
+     * to Apache via mod_xsendfile). `apache` is accepted as an alias of
+     * `x-sendfile`. Unset values fall back to `php`.
+     *
+     * @return FileServerType The type of file server that should be used
+     *
+     * @throws InvalidConfigurationException If the parsed value is not a valid
+     *                                       file server type
      */
     private static function fileServer(): FileServerType
     {
@@ -236,11 +314,17 @@ final class ConfigManager
             return FileServerType::Php;
         }
 
-        return match (strtolower(trim($value))) {
+        $parsed = match (strtolower(trim($value))) {
             'php', 'php-stream'    => FileServerType::Php,
             'apache', 'x-sendfile' => FileServerType::XSendfile,
-            default => FileServerType::Php,
+            default => throw new InvalidConfigurationException(
+                'KITTYSHARE_FILE_SERVER',
+                $value,
+                'one of php or x-sendfile (apache is accepted as an alias)',
+            ),
         };
+
+        return $parsed;
     }
 
     /**

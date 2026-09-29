@@ -15,6 +15,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use KittyShare\Manager\ConfigManager;
+use KittyShare\Manager\InvalidConfigurationException;
 use KittyShare\Database\SQLiteDatabase;
 use KittyShare\Database\SQLiteMigrator;
 use KittyShare\Repository\SQLiteDBVersionRepository;
@@ -25,7 +26,13 @@ if (php_sapi_name() !== 'cli') {
     exit(1);
 }
 
-$databasePath = ConfigManager::get()->databasePath;
+try {
+    $databasePath = ConfigManager::get()->databasePath;
+} catch (InvalidConfigurationException $e) {
+    fwrite(STDERR, 'Invalid configuration: ' . $e->getMessage() . "\n");
+
+    exit(1);
+}
 
 $parentDir = dirname($databasePath);
 

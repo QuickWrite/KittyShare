@@ -2,6 +2,7 @@
 
 namespace KittyShare\Http;
 
+use InvalidArgumentException;
 use Override;
 
 /**
@@ -23,6 +24,17 @@ final class TemplateResponse implements Response
         private int $statusCode = 200,
         private array $headers = [],
     ) {
+        if ($template === '') {
+            throw new InvalidArgumentException('Template name must not be empty.');
+        }
+
+        foreach (explode('/', $template) as $segment) {
+            if (preg_match('/^[A-Za-z0-9_-]+$/', $segment) !== 1) {
+                throw new InvalidArgumentException(
+                    "Invalid template name '{$template}'.",
+                );
+            }
+        }
     }
 
     /**

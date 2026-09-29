@@ -45,8 +45,5 @@ jobs:
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
-    - name: Lint and analyse
+    - name: Lint, analyse and test
       run: composer ci
-
-    # - name: Run test suite
-    #   run: composer test

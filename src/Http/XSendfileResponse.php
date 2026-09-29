@@ -2,6 +2,8 @@
 
 namespace KittyShare\Http;
 
+use InvalidArgumentException;
+
 /**
  * A response that delegates the file transfer to Apache via mod_xsendfile.
  */
@@ -17,6 +19,14 @@ final class XSendfileResponse implements Response
         private string $contentType,
         private int $statusCode = 200,
     ) {
+        // Sanity checks to prevent evil response headers
+        if (str_contains($file, "\r\n")) {
+            throw new InvalidArgumentException('The $file cannot contain CRLF.');
+        }
+
+        if (str_contains($contentType, "\r\n")) {
+            throw new InvalidArgumentException('The $contentType cannot contain CRLF.');
+        }
     }
 
     public function send(): void

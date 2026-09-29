@@ -33,6 +33,15 @@ final class SQLiteMigrator
         $version = $versions->currentVersion();
         $applied = [];
 
+        // A database from a newer application version cannot be migrated
+        // by this one; Refusing loudly
+        if ($version > SQLiteDBVersionRepository::EXPECTED_VERSION) {
+            throw MigrationMismatchException::forNewerDatabase(
+                $version,
+                SQLiteDBVersionRepository::EXPECTED_VERSION,
+            );
+        }
+
         foreach (self::migrationFiles($migrationsDir) as $file) {
             preg_match('/V(\d+)_/', basename($file), $m);
             assert(count($m) === 2, 'The matched values should not be empty');
@@ -44,7 +53,7 @@ final class SQLiteMigrator
             }
 
             if ($fileVersion > SQLiteDBVersionRepository::EXPECTED_VERSION) {
-                throw new MigrationMismatchException($fileVersion, SQLiteDBVersionRepository::EXPECTED_VERSION);
+                throw MigrationMismatchException::forMigrationFile($fileVersion, SQLiteDBVersionRepository::EXPECTED_VERSION);
             }
 
             require_once $file;
