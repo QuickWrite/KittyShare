@@ -180,6 +180,47 @@ final class RouterTest extends TestCase
         $this->assertSame('a+b', RouterTestStubController::$lastRequest?->urlParam('path'));
     }
 
+    #[Test]
+    public function encodedSlashDecodesInsideParam(): void
+    {
+        $this->router->get('/share/{id}', RouterTestStubController::class);
+
+        $this->router->dispatch(Method::Get, '/share/a%2Fb');
+
+        $this->assertSame('a/b', RouterTestStubController::$lastRequest?->urlParam('id'));
+    }
+
+    #[Test]
+    public function doubleEncodingIsOnlyDecodedOnce(): void
+    {
+        $this->router->get('/share/{id}/{...path}', RouterTestStubController::class);
+
+        $this->router->dispatch(Method::Get, '/share/x/%252e%252e%252fetc');
+
+        $this->assertSame('%2e%2e%2fetc', RouterTestStubController::$lastRequest?->urlParam('path'));
+    }
+
+    #[Test]
+    public function unsupportedMethodReturns404(): void
+    {
+        $this->router->get('/login', RouterTestStubController::class);
+
+        $response = $this->router->dispatch(Method::Post, '/login');
+
+        $this->assertInstanceOf(TemplateResponse::class, $response);
+        $this->assertSame(404, $this->readProperty($response, 'statusCode'));
+    }
+
+    #[Test]
+    public function pathWithoutLeadingSlashDoesNotMatch(): void
+    {
+        $this->router->get('/admin', RouterTestStubController::class);
+
+        $response = $this->router->dispatch(Method::Get, 'ing');
+
+        $this->assertInstanceOf(TemplateResponse::class, $response);
+    }
+
     private function resetConfig(): void
     {
         (new ReflectionProperty(ConfigManager::class, 'config'))->setValue(null, null);
