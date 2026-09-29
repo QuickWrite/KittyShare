@@ -7,11 +7,13 @@ use KittyShare\Manager\ConfigManager;
 use KittyShare\Filesystem\DirectoryBrowser;
 use KittyShare\Model\Share;
 use Override;
+use function explode;
 use function is_dir;
 use function realpath;
 use function basename;
 use function is_file;
 use function mime_content_type;
+use function str_starts_with;
 
 final class ShareController extends BaseController
 {
@@ -40,6 +42,12 @@ final class ShareController extends BaseController
             return $this->notFound();
         }
 
+        // Shares are created inside the browse root. If the root was narrowed
+        // afterwards, shares left outside of it must no longer be served.
+        if (!DirectoryBrowser::isWithinRoot(DirectoryBrowser::browseRoot(), $shareRoot)) {
+            return $this->notFound();
+        }
+
         if (is_file($shareRoot)) {
             return $this->handleFileRoot($share, $shareRoot, $path);
         }
@@ -59,6 +67,10 @@ final class ShareController extends BaseController
         $resolvedPath = DirectoryBrowser::resolvePath($shareRoot, $path);
 
         if ($resolvedPath === null) {
+            return $this->notFound();
+        }
+
+        if (!$this->isVisiblePath($shareRoot, $resolvedPath)) {
             return $this->notFound();
         }
 
@@ -156,6 +168,31 @@ final class ShareController extends BaseController
                 ),
             ]
         );
+    }
+
+    /**
+     * Checks that a resolved path may be served under the dotfile setting.
+     *
+     * @param string $shareRoot    The canonical absolute path to the share root.
+     * @param string $resolvedPath The canonical absolute path to check.
+     *
+     * @return bool True when the path contains no hidden segment.
+     */
+    private function isVisiblePath(
+        string $shareRoot,
+        string $resolvedPath,
+    ): bool {
+        if (ConfigManager::get()->showDotfiles) {
+            return true;
+        }
+
+        foreach (explode('/', DirectoryBrowser::relativePath($shareRoot, $resolvedPath)) as $segment) {
+            if ($segment !== '' && str_starts_with($segment, '.')) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -48,7 +48,7 @@ class SetupController extends BaseController
         $errors = [];
 
         $username = trim($request->post('username') ?? '');
-        $password = trim($request->post('password') ?? '');
+        $password = $request->post('password') ?? '';
 
         if ($username === '') {
             $errors['username'] = 'empty';
