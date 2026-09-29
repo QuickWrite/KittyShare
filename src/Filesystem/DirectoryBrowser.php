@@ -141,6 +141,12 @@ final class DirectoryBrowser
             return [];
         }
 
+        $canonicalDir = realpath($directoryPath);
+
+        if ($canonicalDir === false) {
+            return [];
+        }
+
         $result = [];
 
         foreach ($entries as $entry) {
@@ -153,6 +159,12 @@ final class DirectoryBrowser
             }
 
             $entryPath = $directoryPath . DIRECTORY_SEPARATOR . $entry;
+
+            $canonicalEntry = realpath($entryPath);
+            if ($canonicalEntry === false || !self::isWithinRoot($canonicalDir, $canonicalEntry)) {
+                continue;
+            }
+
             $entryRelativePath = $relativePath === ''
                 ? $entry
                 : $relativePath . '/' . $entry;
