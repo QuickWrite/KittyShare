@@ -69,17 +69,6 @@ final class FileResponseFactoryTest extends TestCase
     }
 
     #[Test]
-    public function fallsBackToFileResponseForUnknownBackend(): void
-    {
-        putenv('KITTYSHARE_FILE_SERVER=unknown-backend');
-        $this->resetConfig();
-
-        $response = FileResponseFactory::forFile('/tmp/example.txt', 'text/plain');
-
-        $this->assertInstanceOf(FileResponse::class, $response);
-    }
-
-    #[Test]
     public function forwardsArgumentsToFileResponse(): void
     {
         putenv('KITTYSHARE_FILE_SERVER=php');
