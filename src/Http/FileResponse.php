@@ -2,6 +2,8 @@
 
 namespace KittyShare\Http;
 
+use InvalidArgumentException;
+
 /**
  * A response that sends a file to the client.
  */
@@ -19,6 +21,10 @@ final class FileResponse implements Response
         private int $statusCode = 200,
         private int $chunkSize = 8192,
     ) {
+        // Sanity checks to prevent evil response headers
+        if (str_contains($contentType, "\r\n")) {
+            throw new InvalidArgumentException('The $contentType cannot contain CRLF.');
+        }
     }
 
     /**

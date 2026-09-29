@@ -88,6 +88,14 @@ final class FileResponseTest extends TestCase
         $this->assertStringContainsString('CODE:404', $result['stderr']);
     }
 
+    #[Test]
+    public function contentTypeWithCrlfIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new FileResponse('/tmp/example.txt', "text/plain\r\nX-Evil: 1");
+    }
+
     private function writeTempFile(string $content): string
     {
         $file = tempnam(sys_get_temp_dir(), 'kittyshare-file-');

@@ -80,6 +80,22 @@ final class XSendfileResponseTest extends TestCase
         $this->assertStringContainsString('CODE:404', $result['stderr']);
     }
 
+    #[Test]
+    public function filePathWithCrlfIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new XSendfileResponse("/tmp/x\r\nX-Evil: 1", 'text/plain');
+    }
+
+    #[Test]
+    public function contentTypeWithCrlfIsRejected(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new XSendfileResponse('/tmp/example.txt', "text/plain\r\nX-Evil: 1");
+    }
+
     private function sendSnippet(string $file, string $contentType, int $statusCode): string
     {
         return sprintf(
