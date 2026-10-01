@@ -1,0 +1,64 @@
+# KittyShare demo Compose file.
+#
+# Copy this file to your server, adjust the paths and settings below,
+# then start the application with:
+#
+#   docker compose up -d
+#
+# The web interface will be available on http://localhost:9000 by default.
+
+services:
+  kittyshare:
+    # Image pulled from the GitHub Container Registry. Tags can either be
+    # `latest`, the full commit SHA, or a release version (e.g. `v1.2.0`).
+    image: ghcr.io/quickwrite/kittyshare:latest
+    restart: unless-stopped
+    ports:
+      - 9000:80
+    volumes:
+      # Host folder that gets shared (read-only). Change the folder to the
+      # folder you want to share.
+      - /my/public/folder:/data/files:ro
+      # Named volume that persists the SQLite database across restarts.
+      - db_data:/var/www/data
+    # environment:
+    #   Session lifetime in seconds (default: 2592000 = 30 days).
+    #   - KITTYSHARE_SESSION_LIFETIME=2592000
+    #
+    #   Session cookie SameSite policy: Lax, Strict or None (default: Lax).
+    #   None requires Secure (see below).
+    #   - KITTYSHARE_COOKIE_SAMESITE=Lax
+    #
+    #   Session cookie Secure flag: 1/true/yes/on or 0/false/no/off.
+    #   When left unset (default), it follows automatically whether the
+    #   request uses HTTPS. Set to true when using SameSite=None.
+    #   - KITTYSHARE_COOKIE_SECURE=true
+    #
+    #   List dotfiles in share and picker listings: true to show
+    #   (default: false = hidden).
+    #   - KITTYSHARE_SHOW_DOTFILES=false
+    #
+    #   Canonical base URL used when generating absolute share links
+    #   (default: relative links). Accepts three formats:
+    #   full URL, host + path without protocol, or bare path.
+    #   - KITTYSHARE_BASE_URL=https://files.example.com
+    #   - KITTYSHARE_BASE_URL=127.0.0.1:9000/app
+    #   - KITTYSHARE_BASE_URL=/app
+    #
+    #   Generic meta description text (default: omitted).
+    #   When set, it is used for <meta name="description"> and
+    #   og:description on all pages.
+    #   - KITTYSHARE_META_DESCRIPTION=KittyShare: self-hosted private file sharing.
+    #
+    #   Open Graph tags: none, minimal or per-share (default: none).
+    #     `none`: no og:* tags.
+    #     `minimal`: only generic site tags (og:site_name, og:type, og:title).
+    #     `per-share`: additionally the shared folder/file name as og:title,
+    #                  file/folder counts as og:description, and the app logo as
+    #                  og:image on share pages.
+    #
+    #   - KITTYSHARE_META_OG_MODE=none
+
+volumes:
+  # Persists the SQLite database file outside the container lifecycle.
+  db_data:

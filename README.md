@@ -38,6 +38,13 @@ migration aborts container startup.
 
 For configuring the application look at the section [Environment Variables](#environment-variables).
 
+----
+
+To run the application using [Docker Compose](https://docs.docker.com/compose/)
+the [`compose.yaml`](compose.yaml) file can be used as a base template. The
+application manages it's own SQLite database and Apache webserver. As such no
+external services are needed.
+
 ### Running directly on a PHP server
 
 KittyShare can also be hosted directly on a server with PHP 8.4 or later. Apache is supported out of the box, although other web servers such as Nginx or Caddy can also be used.
