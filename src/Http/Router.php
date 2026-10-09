@@ -4,6 +4,8 @@ namespace KittyShare\Http;
 
 use KittyShare\Model\Dependencies;
 use KittyShare\Manager\ConfigManager;
+use KittyShare\Manager\TranslationManager;
+use KittyShare\Translations\Language;
 
 /**
  * The router is responsible for dispatching requests to the correct handler
@@ -95,6 +97,7 @@ final class Router
             parameters: [
                 'path' => $path,
                 'baseUrl' => ConfigManager::get()->baseUrl,
+                'translationManager' => new TranslationManager(Language::EN), // TODO: Do not hardcode
             ],
             statusCode: 404,
         );
