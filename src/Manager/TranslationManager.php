@@ -4,6 +4,7 @@ namespace KittyShare\Manager;
 
 use KittyShare\Translations\Language;
 use KittyShare\Translations\TranslationKeys;
+use OutOfBoundsException;
 
 /**
  * Manages the translation values the application uses
@@ -26,6 +27,12 @@ final class TranslationManager
     public function get(TranslationKeys $key, string ...$values): string
     {
         // If the key does not exist, something went wrong... badly.
+        if (!array_key_exists($key->value, $this->translations)) {
+            throw new OutOfBoundsException(
+                sprintf('Translation key "%s" does not exist.', $key->value),
+            );
+        }
+
         $translation = $this->translations[$key->value];
 
         if (is_string($translation)) {
