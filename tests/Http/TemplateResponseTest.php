@@ -2,6 +2,8 @@
 
 use KittyShare\Http\Response;
 use KittyShare\Http\TemplateResponse;
+use KittyShare\Manager\TranslationManager;
+use KittyShare\Translations\Language;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -51,7 +53,7 @@ final class TemplateResponseTest extends TestCase
     {
         $response = new TemplateResponse(
             'error/404',
-            ['path' => '/missing', 'baseUrl' => ''],
+            ['path' => '/missing', 'baseUrl' => '', 'translationManager' => new TranslationManager(Language::EN)],
             404,
         );
 
@@ -72,7 +74,7 @@ final class TemplateResponseTest extends TestCase
     {
         $response = new TemplateResponse(
             'error/404',
-            ['path' => '/a<b>&"c"', 'baseUrl' => ''],
+            ['path' => '/a<b>&"c"', 'baseUrl' => '', 'translationManager' => new TranslationManager(Language::EN)],
             404,
         );
 

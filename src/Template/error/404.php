@@ -1,18 +1,23 @@
 <?php
-/** @var string $path */
+use KittyShare\Manager\TranslationManager;
+use KittyShare\Translations\TranslationKeys;
+/**
+ * @var string $path
+ * @var TranslationManager $translationManager
+ */
 ?>
 <?php
 require_once __DIR__ . '/../partials/base.php';
 
 $GLOBALS['__kittyshare_base'] = $baseUrl ?? '';
 
-renderHeader("404 Page not found");
+renderHeader($translationManager->get(TranslationKeys::PAGE_404_TITLE));
 ?>
 <main>
-    <h1 class="title">404 Page not found</h1>
-    <p>Hey! It seems like the site that you've tried to access does not exist.</p>
+    <h1 class="title"><?= $translationManager->get(TranslationKeys::PAGE_404_TITLE) ?></h1>
+    <p><?= $translationManager->get(TranslationKeys::PAGE_404_SUBTITLE) ?></p>
 
-    <p class="margin-top-6">Your requested path was &quot;<?= htmlspecialchars($path) ?>&quot;.</p>
+    <p class="margin-top-6"><?= e($translationManager->get(TranslationKeys::PAGE_404_PATHDESC, $path)) ?></p>
 </main>
 <?php
 renderFooter();

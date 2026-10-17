@@ -2,8 +2,8 @@
 
 namespace KittyShare\Http;
 
+use KittyShare\Controller\NotFoundController;
 use KittyShare\Model\Dependencies;
-use KittyShare\Manager\ConfigManager;
 
 /**
  * The router is responsible for dispatching requests to the correct handler
@@ -90,14 +90,14 @@ final class Router
             );
         }
 
-        return new TemplateResponse(
-            template: "error/404",
-            parameters: [
-                'path' => $path,
-                'baseUrl' => ConfigManager::get()->baseUrl,
-            ],
-            statusCode: 404,
-        );
+        return new NotFoundController($this->dependencies)
+            ->handle(
+                new Request(
+                    method: $method,
+                    uri: $path,
+                    parameters: [],
+                )
+            );
     }
 
     /**
